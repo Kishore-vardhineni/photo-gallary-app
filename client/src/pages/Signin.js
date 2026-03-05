@@ -1,0 +1,134 @@
+import { useForm } from "react-hook-form";
+import login_image from "../assets/images/login_page_image.jpg";
+import { NavLink, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { singinSchema } from "../validation/signinSchema";
+import toast from "react-hot-toast";
+import { signIn } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
+
+
+const Signin = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const { register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm({
+    resolver: yupResolver(singinSchema),
+    defaultValues: {
+      role: "user",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const { data: resData } = await signIn(data);
+      toast.success(resData.message);
+      login(resData);
+      reset();
+      if (resData.user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("Error", error)
+      if (error.response?.data?.message) {
+        toast.error(error.response?.data?.message);
+      }
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex">
+
+      {/* LEFT SIDE - White + Soft Gradient */}
+      <div className="w-1/2 flex items-center justify-center bg-gradient-to-r from-white via-slate-100 to-slate-200">
+
+        <div className="bg-white shadow-2xl rounded-3xl p-10 w-[420px]">
+
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            Photo Gallery
+          </h2>
+
+          <p className="text-gray-500 mb-8">
+            The Faster You Fill Up The Faster You Enjoy!
+          </p>
+
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+
+            <div>
+              <label className="text-sm text-gray-600">Email</label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
+                {...register("email")}
+              />
+              <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-600">Password</label>
+              <input
+                type="password"
+                placeholder="********"
+                className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
+                {...register("password")}
+              />
+              <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
+            </div>
+
+            {/* Remember + Forgot */}
+            <div className="flex justify-between items-center text-sm text-gray-600">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="accent-yellow-500" />
+                Remember me
+              </label>
+
+              <span className="text-yellow-500 hover:underline cursor-pointer">
+                <NavLink to="/forgot-password">
+                    Forgot Password
+                </NavLink>
+              </span>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold text-lg shadow-lg hover:scale-105 hover:shadow-yellow-400/40 transition-all duration-300"
+            >
+              {isSubmitting ? "Signing In..." : "Sign In"}
+            </button>
+
+          </form>
+
+          <p className="text-center text-gray-600 mt-6">
+            Don’t have an account?
+            <NavLink
+              to="/signup"
+              className="text-yellow-500 font-semibold ml-1 hover:underline"
+            >
+              Sign Up
+            </NavLink>
+          </p>
+
+        </div>
+      </div>
+
+      {/* RIGHT SIDE - Pure White */}
+      <div className="w-1/2 flex items-center justify-center bg-white">
+
+        <img src={login_image} alt="" className="h-full w-full object-cover" />
+
+      </div>
+
+    </div>
+
+  )
+}
+
+export default Signin
