@@ -145,7 +145,7 @@ const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.RESET_PWD_CLIENT_URL}/reset-password/${resetToken}`;
 
     const html = 
        `<h3>Password Reset Request</h3>
