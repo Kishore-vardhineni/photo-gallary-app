@@ -45,7 +45,7 @@ const signUp = async (req, res) => {
       },
     });
 
-    const url = `${process.env.CLIENT_URL}/api/auth/verify-email/${token}`;
+    const url = `${process.env.CLIENT_URL}/auth/verify-email/${token}`;
 
     await transporter.sendMail({
       from: process.env.SMTP_EMAIL,
