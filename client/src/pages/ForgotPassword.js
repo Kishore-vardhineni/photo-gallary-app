@@ -10,7 +10,7 @@ const ForgotPassword = () => {
    const navigate = useNavigate();
 
     const {
-        register,
+        register: forgotPassword,
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
@@ -59,7 +59,7 @@ const ForgotPassword = () => {
                                 type="email"
                                 placeholder="Enter your email"
                                 className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
-                                {...register("email")}
+                                {...forgotPassword("email")}
                             />
                             <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
                         </div>

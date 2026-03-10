@@ -170,8 +170,6 @@ const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
 
-    console.log("token", token)
-
     try {
 
       const hashedToken = crypto
@@ -207,7 +205,13 @@ const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     try {
-       const user = await User.findById(req.user._id);
+
+      console.log("Decoded user:", req.user.role);
+
+      const userId = req.user.id;
+       const user = await User.findById(userId);
+
+       console.log("user details", user);
 
        if(!user) {
            return res.status(404).json({ message: "User not found" });

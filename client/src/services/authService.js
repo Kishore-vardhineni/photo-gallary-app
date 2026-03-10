@@ -24,3 +24,9 @@ export const getResetPassword = async (data, token) => {
     return axiosInstance.post( `/auth/reset-password/${token}`, data);
 }
 
+export const getChangePassword = async (data) => {
+    return axiosInstance.post( `/auth/change-password`, data);
+}
+
+
+

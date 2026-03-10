@@ -10,9 +10,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await getTotalUsers();
-        console.log("data", data)
-        setTotalUsers(data.totalUsers);
+        const response = await getTotalUsers();
+        setTotalUsers(response.data.totalUsers);
       } catch (error) {
         console.log(error);
         toast.error(error.response);

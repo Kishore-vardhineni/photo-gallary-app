@@ -12,7 +12,7 @@ const ResetPassword = () => {
     const navigate = useNavigate();
 
     const {
-        register,
+        register: resetPassword,
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
@@ -60,7 +60,7 @@ const ResetPassword = () => {
                                 type="Password"
                                 placeholder="Enter your password"
                                 className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
-                                {...register("password")}
+                                {...resetPassword("password")}
                             />
                             <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
                         </div>
