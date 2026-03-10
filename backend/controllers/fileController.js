@@ -10,8 +10,6 @@ const fileUpload = async (req, res) => {
   try {
     const file = req.file;
 
-    console.log("user", req.user.id);
-
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
@@ -34,14 +32,12 @@ const fileUpload = async (req, res) => {
         fileType: req.file.mimetype
     })
 
-    console.log("file url", fileUrl);
     res.status(200).json({
       message: "File uploaded successfully",
       fileUrl,
     });
 
   } catch (err) {
-    console.error(error);
     res.status(500).json({ error: "Upload failed" });
   }
 }
@@ -69,8 +65,6 @@ const getMyFiles = async(req, res) => {
         const signedUrl = await getSignedUrl(s3, command, {
           expiresIn: 3600,
         });
-
-     console.log("signedUrl", signedUrl);   
 
         return {
           _id: file._id,

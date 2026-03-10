@@ -6,13 +6,17 @@ import { singinSchema } from "../validation/signinSchema";
 import toast from "react-hot-toast";
 import { signIn } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
+import { Eye, EyeOff, Lock } from "lucide-react";
+import { useState } from "react";
 
 
 const Signin = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { register,
+  const {
+    register: singin,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset
@@ -59,51 +63,66 @@ const Signin = () => {
           </p>
 
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-6 max-w-lg">
 
-            <div>
-              <label className="text-sm text-gray-600">Email</label>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
-                {...register("email")}
-              />
-              <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
-            </div>
+              <div>
+                <label className="text-sm text-gray-600">Email</label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
+                  {...singin("email")}
+                />
+                <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
+              </div>
 
-            <div>
-              <label className="text-sm text-gray-600">Password</label>
-              <input
-                type="password"
-                placeholder="********"
-                className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
-                {...register("password")}
-              />
-              <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
-            </div>
+              {/* PASSWORD */}
+              <div>
+                <label className="block mb-2 font-medium">
+                  Password
+                </label>
+                <div className="flex items-center border rounded-xl px-4 py-3">
+                  <Lock size={18} className="text-gray-400 mr-3" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="flex-1 outline-none"
+                    placeholder="Enter password"
+                    {...singin("password")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
+              </div>
 
-            {/* Remember + Forgot */}
-            <div className="flex justify-between items-center text-sm text-gray-600">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="accent-yellow-500" />
-                Remember me
-              </label>
+              {/* Remember + Forgot */}
+              <div className="flex justify-between items-center text-sm text-gray-600">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" className="accent-yellow-500" />
+                  Remember me
+                </label>
 
-              <span className="text-yellow-500 hover:underline cursor-pointer">
-                <NavLink to="/forgot-password">
+                <span className="text-yellow-500 hover:underline cursor-pointer">
+                  <NavLink to="/forgot-password">
                     Forgot Password
-                </NavLink>
-              </span>
+                  </NavLink>
+                </span>
+              </div>
+
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold text-lg shadow-lg hover:scale-105 hover:shadow-yellow-400/40 transition-all duration-300"
+              >
+                {isSubmitting ? "Signing In..." : "Sign In"}
+              </button>
+
             </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold text-lg shadow-lg hover:scale-105 hover:shadow-yellow-400/40 transition-all duration-300"
-            >
-              {isSubmitting ? "Signing In..." : "Sign In"}
-            </button>
-
           </form>
 
           <p className="text-center text-gray-600 mt-6">

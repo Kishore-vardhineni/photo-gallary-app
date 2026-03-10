@@ -5,8 +5,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signUp } from "../services/authService";
 import toast from "react-hot-toast";
 import { signupSchema } from "../validation/signupSchema";
+import { Eye, EyeOff, Lock } from "lucide-react";
+import { useState } from "react";
 
 export const Signup = () => {
+
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const { register,
     handleSubmit,
@@ -52,9 +57,10 @@ export const Signup = () => {
 
             <div className="flex items-center gap-6">
 
-              <label className="text-gray-600 font-medium">
+              <label className="block mb-2 font-medium">
                 Role
               </label>
+              
 
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -80,7 +86,9 @@ export const Signup = () => {
 
 
             <div>
-              <label className="text-sm text-gray-600">User Name</label>
+               <label className="block mb-2 font-medium">
+                User Name
+              </label>
               <input
                 type="text"
                 placeholder="Enter your user name"
@@ -91,7 +99,9 @@ export const Signup = () => {
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Email</label>
+              <label className="block mb-2 font-medium">
+                Email
+              </label>
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -101,25 +111,49 @@ export const Signup = () => {
               <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
             </div>
 
+            {/* NEW PASSWORD */}
             <div>
-              <label className="text-sm text-gray-600">Password</label>
-              <input
-                type="password"
-                placeholder="********"
-                className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
-                {...register("password")}
-              />
+              <label className="block mb-2 font-medium">
+                New Password
+              </label>
+              <div className="flex items-center border rounded-xl px-4 py-3">
+                <Lock size={18} className="text-gray-400 mr-3" />
+                <input
+                  type={showNew ? "text" : "password"}
+                  className="flex-1 outline-none"
+                  placeholder="Enter new password"
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNew(!showNew)}
+                >
+                  {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
             </div>
 
+            {/* CONFIRM PASSWORD */}
             <div>
-              <label className="text-sm text-gray-600">Confirm Password</label>
-              <input
-                type="password"
-                placeholder="********"
-                className="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 outline-none transition-all duration-300"
-                {...register("confirmPassword")}
-              />
+              <label className="block mb-2 font-medium">
+                Confirm New Password
+              </label>
+              <div className="flex items-center border rounded-xl px-4 py-3">
+                <Lock size={18} className="text-gray-400 mr-3" />
+                <input
+                  type={showConfirm ? "text" : "password"}
+                  className="flex-1 outline-none"
+                  placeholder="Confirm new password"
+                  {...register("confirmPassword")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                >
+                  {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               <p className="text-red-500 text-sm mb-2">{errors.confirmPassword?.message}</p>
             </div>
 
