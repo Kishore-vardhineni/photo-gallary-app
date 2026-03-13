@@ -39,7 +39,7 @@ const AppRoutes = () => {
       <Route element={<AdminLayout />}>
 
         <Route
-          path="/admin-dashboard"
+          path="admin/admin-dashboard"
           element={
             <ProtectedRoutes allowedRole="admin">
               <AdminDashboard />
@@ -48,7 +48,7 @@ const AppRoutes = () => {
         />
 
         <Route
-          path="/all-users"
+          path="admin/all-users"
           element={
             <ProtectedRoutes allowedRole="admin">
               <AllUsers />
@@ -57,7 +57,7 @@ const AppRoutes = () => {
         />
 
         <Route
-          path="/admin-photos"
+          path="admin/admin-photos"
           element={
             <ProtectedRoutes allowedRole="admin">
               <AdminPhotos />
@@ -67,7 +67,7 @@ const AppRoutes = () => {
 
         {/* ================= SETTINGS NESTED ROUTES ================= */}
         <Route
-          path="/settings"
+          path="admin/settings"
           element={
             <ProtectedRoutes allowedRole="admin">
               <SettingsLayout />
