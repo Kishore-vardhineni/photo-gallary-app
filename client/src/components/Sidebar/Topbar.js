@@ -103,7 +103,7 @@ const Topbar = () => {
                 {/* Admin Dashboard */}
                 {auth.role === "admin" && (
                   <NavLink
-                    to="/admin-dashboard"
+                    to="admin/admin-dashboard"
                     className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
                     onClick={() => setDropdownOpen(false)}
                   >

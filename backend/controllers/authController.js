@@ -147,10 +147,36 @@ const forgotPassword = async (req, res) => {
 
     const resetUrl = `${process.env.RESET_PWD_CLIENT_URL}/reset-password/${resetToken}`;
 
-    const html = 
-       `<h3>Password Reset Request</h3>
-      <p>Click below link to reset your password:</p>
-      <a href="${resetUrl}" target="_blank">${resetUrl}</a>`
+    const html =
+      `<div style="font-family: Arial, sans-serif; background:#f3f4f6; padding:30px;">
+    <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:8px;">
+      
+      <h2 style="color:#333;">Reset Your Account Password</h2>
+
+      <p>Dear ${user.username},</p>
+
+      <p>
+      We received a request to reset your password. Click the button below to reset your password.
+      </p>
+
+      <div style="margin:25px 0;">
+        <a href="${resetUrl}"
+           style="background:#ef4444;color:white;padding:12px 25px;text-decoration:none;border-radius:30px;font-weight:bold;">
+           RESET PASSWORD
+        </a>
+      </div>
+
+      <p>If the button doesn't work, copy and paste this URL into your browser:</p>
+
+      <p style="color:#2563eb;word-break:break-all;">
+        ${resetUrl}
+      </p>
+
+      <p>This password reset link will expire in 15 minutes.</p>
+
+    </div>
+  </div>
+`
 
     await sendEmail({
       to: user.email,

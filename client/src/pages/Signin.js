@@ -34,7 +34,7 @@ const Signin = () => {
       login(resData);
       reset();
       if (resData.user.role === "admin") {
-        navigate("/admin-dashboard");
+        navigate("/admin/admin-dashboard");
       } else {
         navigate("/");
       }
