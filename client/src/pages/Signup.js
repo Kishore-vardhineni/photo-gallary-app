@@ -1,5 +1,5 @@
 import login_image from "../assets/images/login_page_image.jpg";
-import { Navigate, NavLink} from "react-router-dom";
+import { Navigate, NavLink, } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUp } from "../services/authService";
@@ -38,7 +38,7 @@ export const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
       {/* FORM SECTION */}
       <div className="flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
