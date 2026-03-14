@@ -15,6 +15,7 @@ import AdminPhotos from "../pages/AdminPhotos";
 import ResetPassword from "../pages/ResetPassword";
 import ChangePassword from "../pages/ChangePassword";
 import SettingsLayout from "../pages/SettingsLayout";
+import EditUser from "../pages/EditUser";
 
 const AppRoutes = () => {
   return (
@@ -52,6 +53,15 @@ const AppRoutes = () => {
           element={
             <ProtectedRoutes allowedRole="admin">
               <AllUsers />
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="admin/edit-user/:id"
+          element={
+            <ProtectedRoutes allowedRole="admin">
+              <EditUser />
             </ProtectedRoutes>
           }
         />

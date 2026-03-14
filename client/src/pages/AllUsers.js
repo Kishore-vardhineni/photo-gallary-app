@@ -4,8 +4,10 @@ import { MdDelete } from "react-icons/md";
 import { getAllUsers } from "../services/authService";
 import toast from "react-hot-toast";
 import Topbar from "../components/Sidebar/Topbar";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
 
@@ -31,20 +33,29 @@ const AllUsers = () => {
         user.role.toLowerCase().includes(search.toLowerCase())
     );
 
+    const handleEdit = (id) => {
+        navigate(`admin/edit-user/${id}`);
+    };
+
+
     return (
         <div className="bg-gray-100 min-h-screen">
 
             {/* Topbar */}
             <Topbar />
 
-            {/* Header + Search */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <h1 className="text-1 font-bold text-gray-800 mb-4 md:mb-0">
+            <div class="flex items-center justify-between px-8 py-4 bg-gray-100 border-b">
+
+                {/* Left Title */}
+                <h1 class="text-xl font-semibold text-gray-800">
                     All Users
                 </h1>
 
-                <div className="flex items-center gap-3">
-                    <div className="relative">
+                {/* Right Section */}
+                <div class="flex items-center gap-4">
+
+                    {/* Search */}
+                    <div class="relative">
                         <FiSearch className="absolute left-3 top-3 text-gray-400" />
                         <input
                             type="text"
@@ -55,10 +66,20 @@ const AllUsers = () => {
                         />
                     </div>
 
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow">
+                    {/* Save Button */}
+                   <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow">
                         Search
                     </button>
+
                 </div>
+            </div>
+
+            {/* Breadcrumb */}
+            <div class="px-8 py-4 text-sm text-gray-600">
+
+                <span class="text-blue-500 cursor-pointer">Users</span>
+                <span class="mx-2">/</span>
+
             </div>
 
             {/* Table Card */}
@@ -117,7 +138,7 @@ const AllUsers = () => {
 
                                 {/* Actions */}
                                 <td className="px-6 py-4 flex gap-3">
-                                    <button className="flex items-center gap-1 px-3 py-1 border rounded-md text-gray-600 hover:bg-gray-100">
+                                    <button onClick={() => navigate(`/admin/edit-user/${user._id}`)} className="flex items-center gap-1 px-3 py-1 border rounded-md text-gray-600 hover:bg-gray-100">
                                         <FiEdit size={14} /> Edit
                                     </button>
 
