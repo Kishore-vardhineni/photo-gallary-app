@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 import { getAllUsers } from "../services/authService";
 import toast from "react-hot-toast";
 import Topbar from "../components/Sidebar/Topbar";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
     const navigate = useNavigate();
@@ -32,11 +32,6 @@ const AllUsers = () => {
         user.email?.toLowerCase().includes(search.toLowerCase()) ||
         user.role.toLowerCase().includes(search.toLowerCase())
     );
-
-    const handleEdit = (id) => {
-        navigate(`admin/edit-user/${id}`);
-    };
-
 
     return (
         <div className="bg-gray-100 min-h-screen">
