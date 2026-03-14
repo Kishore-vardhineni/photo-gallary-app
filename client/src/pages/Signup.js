@@ -1,5 +1,5 @@
 import login_image from "../assets/images/login_page_image.jpg";
-import { Navigate, NavLink, } from "react-router-dom";
+import { Navigate, NavLink} from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUp } from "../services/authService";
@@ -38,29 +38,29 @@ export const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-      {/* LEFT SIDE (Gradient Background) */}
-      <div className="w-1/2 flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
+      {/* FORM SECTION */}
+      <div className="flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
 
         <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-[420px]">
 
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-2xl font-bold text-gray-800">
             Photo Gallery
-          </h2>
+          </h1>
 
-          <p className="text-gray-600 mb-8">
+          <p className="text-gray-500 mb-6 text-sm">
             The Faster You Fill Up The Faster You Enjoy!
           </p>
 
+
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
 
-            <div className="flex items-center gap-6">
-
-              <label className="block mb-2 font-medium">
+            {/* Role */}
+            <div className="flex gap-4 mb-4">
+              <label className="flex items-center gap-2">
                 Role
               </label>
-              
 
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -84,9 +84,9 @@ export const Signup = () => {
               <p className="text-red-500 text-sm">{errors.role?.message}</p>
             </div>
 
-
+            {/* Username */}
             <div>
-               <label className="block mb-2 font-medium">
+              <label className="block font-medium">
                 User Name
               </label>
               <input
@@ -98,8 +98,9 @@ export const Signup = () => {
               <p className="text-red-500 text-sm mb-2">{errors.username?.message}</p>
             </div>
 
+            {/* Email */}
             <div>
-              <label className="block mb-2 font-medium">
+              <label className="block font-medium">
                 Email
               </label>
               <input
@@ -111,9 +112,9 @@ export const Signup = () => {
               <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
             </div>
 
-            {/* NEW PASSWORD */}
+            {/* Password */}
             <div>
-              <label className="block mb-2 font-medium">
+              <label className="block font-medium">
                 New Password
               </label>
               <div className="flex items-center border rounded-xl px-4 py-3">
@@ -134,7 +135,7 @@ export const Signup = () => {
               <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
             </div>
 
-            {/* CONFIRM PASSWORD */}
+            {/* Confirm Password */}
             <div>
               <label className="block mb-2 font-medium">
                 Confirm New Password
@@ -165,6 +166,8 @@ export const Signup = () => {
               {isSubmitting ? "Signing Up..." : "Sign Up"}
             </button>
 
+
+
           </form>
 
           <p className="text-center text-gray-600 mt-6">
@@ -175,15 +178,18 @@ export const Signup = () => {
           </p>
 
         </div>
+
       </div>
 
 
-      {/* RIGHT SIDE (White Background) */}
-      <div className="w-1/2 flex items-center justify-center bg-white">
+      {/* IMAGE GALLERY */}
+      <div className="bg-gray-50">
 
+        <div >
 
-        <img src={login_image} alt="" className="h-full w-full object-cover" />
+          <img src={login_image} alt="" className="h-full w-full object-cover" />
 
+        </div>
 
       </div>
 

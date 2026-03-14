@@ -4,8 +4,27 @@ import Topbar from "../components/Sidebar/Topbar";
 
 const SettingsLayout = () => {
     return (
-        <div>
+        <div lass="bg-gray-100 min-h-screen">
             <Topbar />
+
+            <div class="flex items-center justify-between px-8 py-4 bg-gray-100 border-b">
+
+                {/* Left Title */}
+                <h1 class="text-xl font-semibold text-gray-800">
+                    Settings
+                </h1>
+            </div>
+
+            {/* Breadcrumb */}
+            <div class="px-8 py-4 text-sm text-gray-600">
+
+                <NavLink
+                    to="/admin/all-users"
+                    className="text-blue-500 cursor-pointer hover:underline"
+                >
+                    Settings
+                </NavLink>
+            </div>
             
             <div className="p-6 lg:p-10">
                 <div className="bg-white rounded-2xl shadow-lg flex flex-col lg:flex-row overflow-hidden">
