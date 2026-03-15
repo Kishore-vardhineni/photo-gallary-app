@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Topbar from "../components/Sidebar/Topbar";
 import { getTotalUsers } from "../services/authService";
 import toast from "react-hot-toast";
 
@@ -26,8 +25,6 @@ export default function AdminDashboard() {
 
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar */}
-        {/* <Topbar /> */}
 
         {/* Content */}
         <main className="p-6 overflow-y-auto space-y-6">

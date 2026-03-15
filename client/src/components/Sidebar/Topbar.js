@@ -133,7 +133,7 @@ const Topbar = ({ setSidebarOpen }) => {
                       {/* Admin Dashboard */}
                       {auth.role === "admin" && (
                         <NavLink
-                          to="admin/admin-dashboard"
+                          to="admin-dashboard"
                           className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
                           onClick={() => setDropdownOpen(false)}
                         >
@@ -165,8 +165,6 @@ const Topbar = ({ setSidebarOpen }) => {
 
               </div>
 
-              {/* Mobile Menu */}
-             
             </div>
           
         </div>

@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
 const ForgotPassword = () => {
-   const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const {
         register: forgotPassword,
@@ -32,14 +32,20 @@ const ForgotPassword = () => {
 
     return (
 
-        <div className="min-h-screen flex flex-col lg:flex-row">
+        <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-            {/* LEFT SECTION */}
-            <div className="w-full lg:w-1/2 bg-[#cfd6df] flex items-center justify-center px-6 py-10 sm:px-10 lg:px-20">
+            {/* FORM SECTION */}
+            <div className="flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
 
-                <div className="bg-white w-full max-w-md sm:max-w-lg 
-                        rounded-3xl shadow-2xl 
-                        px-6 py-8 sm:px-10 sm:py-10">
+                <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-[420px]">
+
+                    <h1 className="text-2xl font-bold text-gray-800">
+                        Photo Gallery
+                    </h1>
+
+                    <p className="text-gray-500 mb-6 text-sm">
+                        The Faster You Fill Up The Faster You Enjoy!
+                    </p>
 
                     <h2 className="text-3xl font-bold text-gray-800">
                         Forgot Password
@@ -50,6 +56,7 @@ const ForgotPassword = () => {
                     </p>
 
                     <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+
                         {/* Email */}
                         <div className="mt-6">
                             <label className="block text-gray-700 font-medium mb-2">
@@ -72,15 +79,10 @@ const ForgotPassword = () => {
                         >
                             {isSubmitting ? "Reset Password In..." : "Send Reset Link"}
                         </button>
-                        {/* <button
-                            className="w-full mt-6 py-3 rounded-full font-semibold text-white
-                       bg-gradient-to-r from-yellow-400 to-yellow-500
-                       hover:opacity-90 transition duration-300 shadow-md"
-                        >
-                            Send Reset Link
-                        </button> */}
-                    </form>
 
+
+
+                    </form>
 
                     {/* Back to login */}
                     <div className="mt-6 text-center text-sm">
@@ -90,21 +92,26 @@ const ForgotPassword = () => {
                         >
                             Back to Login
                         </NavLink>
-                        {/* <a href="/login" className="text-yellow-500 hover:underline">
-                            
-                        </a> */}
                     </div>
+
                 </div>
+
             </div>
 
-            {/* RIGHT SECTION - IMAGE GALLERY */}
-            <div className="hidden lg:flex w-1/2 bg-gray-100 items-center justify-center p-10">
 
-                <img src={login_image} alt="" className="h-full w-full object-cover" />
+            {/* IMAGE GALLERY */}
+            <div className="bg-gray-50">
+
+                <div >
+
+                    <img src={login_image} alt="" className="h-full w-full object-cover" />
+
+                </div>
 
             </div>
 
         </div>
+
     )
 }
 
