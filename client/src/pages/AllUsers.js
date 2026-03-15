@@ -3,7 +3,6 @@ import { FiSearch, FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { getAllUsers } from "../services/authService";
 import toast from "react-hot-toast";
-import Topbar from "../components/Sidebar/Topbar";
 import { useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
@@ -36,10 +35,7 @@ const AllUsers = () => {
     return (
         <div className="bg-gray-100 min-h-screen">
 
-            {/* Topbar */}
-            <Topbar />
-
-            <div class="flex items-center justify-between px-8 py-4 bg-gray-100 border-b">
+            <div class="flex items-center justify-between bg-gray-100 border-b">
 
                 {/* Left Title */}
                 <h1 class="text-xl font-semibold text-gray-800">

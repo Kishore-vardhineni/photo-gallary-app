@@ -1,39 +1,55 @@
 import { NavLink } from "react-router-dom";
 import { SideMenubar } from "./SideMenubar";
 import logo from "../../assets/images/Photo_Gallary_Logo.png";
+import { X } from "lucide-react";
 
-const SidebarItem = ({ role = "admin", isOpen, setIsOpen }) => {
+const SidebarItem = ({ role = "admin", sidebarOpen, setSidebarOpen }) => {
 
   const menuItems = SideMenubar[role] || [];
 
   return (
     <>
       {/* Mobile Overlay */}
-      {isOpen && (
+      {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed md:static z-50 top-0 left-0 h-full w-64 
-        bg-gradient-to-b from-[#0f172a] to-black p-5 
-        transform transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0`}
+        className={`
+        fixed z-50 lg:static
+        inset-y-0 left-0
+        w-64
+        bg-[#0f172a]
+        text-white
+        transform
+        transition-transform
+        duration-300
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        lg:translate-x-0
+        `}
       >
+
         {/* Logo */}
-        <div className="mb-8 flex">
-          <div className="flex gap-1">
-            <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
+
+          <div>
               <img src={logo} className="w-10 h-10 rounded-full border-2 border-gray-300" alt="logo" />
-            </div>
           </div>
-          <h1 className="text-white text-xl font-bold">
+           <h1 className="text-white text-xl font-bold">
             {role === "admin" ? "Photo Gallary" : "Photo Gallery"}
           </h1>
+          <button
+            className="lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X />
+          </button>
+
         </div>
+
 
         {/* Menu */}
         <nav className="space-y-3">
@@ -44,7 +60,7 @@ const SidebarItem = ({ role = "admin", isOpen, setIsOpen }) => {
               <NavLink
                 key={index}
                 to={item.path}
-                onClick={() => setIsOpen(false)}
+                onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${isActive
