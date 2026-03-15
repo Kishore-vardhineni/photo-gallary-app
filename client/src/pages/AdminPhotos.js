@@ -1,5 +1,4 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
-import Topbar from "../components/Sidebar/Topbar";
 import { useState, useRef, useEffect } from "react";
 
 const AdminPhotos = () => {
@@ -70,8 +69,6 @@ const AdminPhotos = () => {
 
     return (
         <div className="bg-white rounded-xl shadow p-4 sm:p-6">
-
-            <Topbar />
             
             {/* Bulk Action Bar */}
             {selected.length > 0 && (

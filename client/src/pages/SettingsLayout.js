@@ -1,11 +1,9 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { Lock, User } from "lucide-react";
-import Topbar from "../components/Sidebar/Topbar";
 
 const SettingsLayout = () => {
     return (
         <div lass="bg-gray-100 min-h-screen">
-            <Topbar />
 
             <div class="flex items-center justify-between px-8 py-4 bg-gray-100 border-b">
 

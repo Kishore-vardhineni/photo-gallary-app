@@ -27,7 +27,7 @@ export default function AdminDashboard() {
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Topbar */}
-        <Topbar />
+        {/* <Topbar /> */}
 
         {/* Content */}
         <main className="p-6 overflow-y-auto space-y-6">
