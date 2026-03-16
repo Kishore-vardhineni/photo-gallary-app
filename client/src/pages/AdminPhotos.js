@@ -1,5 +1,7 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
+import { getAllPhotos } from "../services/authService";
 
 const AdminPhotos = () => {
     const initialPhotos = [
@@ -53,11 +55,26 @@ const AdminPhotos = () => {
 
     // Indeterminate state logic
     useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const res = await getAllPhotos();
+
+                console.log("data", res?.data?.filedetails);
+
+                setPhotos(res.data.filedetails);
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response);
+            }
+        };
+
+
         if (selected.length > 0 && selected.length < photos.length) {
             selectAllRef.current.indeterminate = true;
         } else {
             selectAllRef.current.indeterminate = false;
         }
+        fetchUsers();
     }, [selected, photos.length]);
 
     // Bulk Delete Example
@@ -129,22 +146,22 @@ const AdminPhotos = () => {
                     <tbody>
                         {photos.map((photo) => (
                             <tr
-                                key={photo.id}
-                                className={`border-b text-sm hover:bg-gray-50 ${selected.includes(photo.id) ? "bg-yellow-50" : ""
+                                key={photo._id}
+                                className={`border-b text-sm hover:bg-gray-50 ${selected.includes(photo._id) ? "bg-yellow-50" : ""
                                     }`}
                             >
                                 <td className="py-3 px-2">
                                     <input
                                         type="checkbox"
-                                        checked={selected.includes(photo.id)}
-                                        onChange={() => handleSelectOne(photo.id)}
+                                        checked={selected.includes(photo._id)}
+                                        onChange={() => handleSelectOne(photo._id)}
                                         className="w-4 h-4 accent-yellow-500"
                                     />
                                 </td>
 
                                 <td>
                                     <img
-                                        src="https://picsum.photos/60"
+                                        src={photo.url}
                                         alt="preview"
                                         className="rounded w-14 h-14 object-cover"
                                     />
@@ -159,8 +176,8 @@ const AdminPhotos = () => {
                                 </td>
 
                                 <td>{photo.author}</td>
-                                <td>{photo.date}</td>
-                                <td>{photo.size}</td>
+                                <td>{new Date(photo.uploadDate).toLocaleDateString()}</td>
+                                <td>{(photo.size / 1024 / 1024).toFixed(2)} MB</td>
 
                                 <td>
                                     <span
