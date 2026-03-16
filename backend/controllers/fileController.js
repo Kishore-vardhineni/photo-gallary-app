@@ -8,7 +8,8 @@ dotenv.config();
 
 const fileUpload = async (req, res) => {
   try {
-    const file = req.file;
+     const file = req.file;
+     const { title, category, author, status } = req.body;
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
@@ -26,15 +27,22 @@ const fileUpload = async (req, res) => {
     await s3.send(new PutObjectCommand(params));
     const fileUrl = `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET}/${params.Key}`;
 
-    await File.create({
-        userId: req.user.id,
-        key: key,
-        fileType: req.file.mimetype
-    })
+    const savedFile = await File.create({
+      userId: req.user.id,
+      title,
+      category,
+      author,
+      status: status || "Published",
+      uploadDate: new Date(),
+      size: file.size,
+      fileType: file.mimetype,
+      key,
+      url: fileUrl
+    });
 
     res.status(200).json({
       message: "File uploaded successfully",
-      fileUrl,
+      savedFile,
     });
 
   } catch (err) {
@@ -45,7 +53,7 @@ const fileUpload = async (req, res) => {
 const getMyFiles = async(req, res) => {
    try {
      
-     const files = await File.find({ userId: req.user.id });
+     const files = await File.find({ userId: req.user.id }).sort({ createdAt: -1 });
 
      if(!files) {
        return res.status(404).json({ message: "No files found" });
@@ -66,10 +74,21 @@ const getMyFiles = async(req, res) => {
           expiresIn: 3600,
         });
 
+        console.log("File", files)
+
         return {
           _id: file._id,
-          fileType: file.fileType,
           url: signedUrl,
+          userid: file._userid,
+          title: file.title,
+          category: file.category,
+          author: file.author,
+          key: file.key,
+          uploadDate: file.uploadDate,
+          size: file.size,
+          status: file.status,
+          fileType: file.mimetype,
+          createdAt: file.createdAt
         };
       })
     );

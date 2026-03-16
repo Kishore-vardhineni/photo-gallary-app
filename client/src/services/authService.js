@@ -28,5 +28,9 @@ export const getChangePassword = async (data) => {
     return axiosInstance.post( `/auth/change-password`, data);
 }
 
+export const getAllPhotos = async () => {
+    return axiosInstance.get( `/files/get-files`);
+}
+
 
 
