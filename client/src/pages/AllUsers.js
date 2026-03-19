@@ -33,21 +33,17 @@ const AllUsers = () => {
     );
 
     return (
-        <div className="bg-gray-100 min-h-screen">
 
-            <div class="flex items-center justify-between bg-gray-100 border-b">
 
-                {/* Left Title */}
-                <h1 class="text-xl font-semibold text-gray-800">
-                    All Users
-                </h1>
 
-                {/* Right Section */}
-                <div class="flex items-center gap-4">
+        <div className="p-4 lg:p-6 bg-gray-100 min-h-screen">
 
-                    {/* Search */}
-                    <div class="relative">
-                        <FiSearch className="absolute left-3 top-3 text-gray-400" />
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                <h2 className="text-2xl font-semibold">All Users</h2>
+
+                <div className="flex gap-2">
+                     <FiSearch className="absolute left-3 top-3 text-gray-400" />
                         <input
                             type="text"
                             placeholder="Search users..."
@@ -55,12 +51,6 @@ const AllUsers = () => {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                    </div>
-
-                    {/* Save Button */}
-                   <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow">
-                        Search
-                    </button>
 
                 </div>
             </div>
@@ -73,61 +63,51 @@ const AllUsers = () => {
 
             </div>
 
-            {/* Table Card */}
-            <div className="bg-white rounded-2xl shadow-md overflow-x-auto">
 
+
+            {/* ========================= */}
+            {/* ✅ Desktop TABLE VIEW */}
+            {/* ========================= */}
+            <div className="hidden lg:block bg-white rounded-xl shadow overflow-hidden">
                 <table className="w-full text-left">
-
-                    {/* Table Header */}
-                    <thead className="border-b bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-4 text-gray-600 font-semibold">Name</th>
-                            <th className="px-6 py-4 text-gray-600 font-semibold">Email</th>
-                            <th className="px-6 py-4 text-gray-600 font-semibold">Role</th>
-                            <th className="px-6 py-4 text-gray-600 font-semibold">Actions</th>
+                    <thead className="bg-gray-50 border-b">
+                        <tr className="text-gray-500 text-sm">
+                            <th className="p-4">Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th className="text-center">Actions</th>
                         </tr>
                     </thead>
 
-                    {/* Table Body */}
                     <tbody>
                         {filterdUsers.map((user) => (
-                            <tr key={user._id} className="border-b hover:bg-gray-50 transition">
-
-                                {/* Name + Image */}
-                                <td className="px-6 py-4 flex items-center gap-4">
-                                    <img
+                            <tr key={user.id} className="border-b hover:bg-gray-50">
+                                <td className="p-4 flex items-center gap-3">
+                                   <img
                                         src="https://i.pravatar.cc/150?img=3"
                                         alt={user.username}
                                         className="w-12 h-12 rounded-full object-cover"
                                     />
+
                                     <div>
-                                        <p className="font-semibold text-gray-800">
-                                            {user.username}
-                                        </p>
-                                        <p className="text-sm text-gray-500 truncate max-w-[200px]">
-                                            {user.email}
-                                        </p>
+                                        <p className="font-medium">{user.name}</p>
+                                        <p className="text-sm text-gray-400">{user.email}</p>
                                     </div>
                                 </td>
 
-                                {/* Email Column */}
-                                <td className="px-6 py-4 text-gray-600">
-                                    {user.email}
-                                </td>
+                                <td>{user.email}</td>
 
-                                {/* Role Badge */}
-                                <td className="px-6 py-4">
+                                <td>
                                     <span
-                                        className={`px-3 py-1 text-xs rounded-full font-medium ${user.role === "admin"
-                                            ? "bg-red-100 text-red-600"
-                                            : "bg-green-100 text-green-600"
+                                        className={`px-3 py-1 text-xs rounded-full ${user.role === "admin"
+                                                ? "bg-red-100 text-red-500"
+                                                : "bg-green-100 text-green-600"
                                             }`}
                                     >
                                         {user.role}
                                     </span>
                                 </td>
 
-                                {/* Actions */}
                                 <td className="px-6 py-4 flex gap-3">
                                     <button onClick={() => navigate(`/admin/edit-user/${user._id}`)} className="flex items-center gap-1 px-3 py-1 border rounded-md text-gray-600 hover:bg-gray-100">
                                         <FiEdit size={14} /> Edit
@@ -142,34 +122,63 @@ const AllUsers = () => {
                         ))}
                     </tbody>
                 </table>
+            </div>
 
-                {/* Pagination */}
-                <div className="flex items-center justify-between px-6 py-4">
-                    <button className="px-4 py-2 border rounded-md hover:bg-gray-100">
-                        Previous
-                    </button>
+            {/* ========================= */}
+            {/* ✅ Tablet + Mobile CARD VIEW */}
+            {/* ========================= */}
+            <div className="lg:hidden space-y-4">
+                {users.map((user) => (
+                    <div
+                        key={user.id}
+                        className="bg-white rounded-xl p-4 shadow"
+                    >
+                        <div className="flex items-center gap-4">
 
-                    <div className="flex items-center gap-2">
-                        <button className="px-3 py-1 bg-blue-600 text-white rounded-md">
-                            1
-                        </button>
-                        <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-                            2
-                        </button>
-                        <span>...</span>
-                        <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-                            10
-                        </button>
+                            {/* Avatar */}
+                            <img
+                                src="https://i.pravatar.cc/150?img=3"
+                                alt={user.username}
+                                className="w-12 h-12 rounded-full object-cover"
+                            />
+
+                            {/* Info */}
+                            <div className="flex-1">
+                                <p className="font-semibold text-lg">{user.name}</p>
+                                <p className="text-sm text-gray-500">{user.email}</p>
+
+                                <span
+                                    className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${user.role === "admin"
+                                            ? "bg-red-100 text-red-500"
+                                            : "bg-green-100 text-green-600"
+                                        }`}
+                                >
+                                    {user.role}
+                                </span>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex flex-col gap-2">
+                                <button
+                                    onClick={() => navigate(`/admin/edit-user/${user._id}`)}
+                                    className="flex items-center gap-2 border px-3 py-1 rounded-md text-sm hover:bg-gray-100"
+                                >
+                                    <FiEdit size={14} />
+                                    <span>Edit</span>
+                                </button>
+                                <button
+                                    onClick={() => navigate(`/admin/edit-user/${user._id}`)}
+                                    className="flex items-center gap-2 border px-3 py-1 rounded-md text-sm hover:bg-gray-100"
+                                >
+                                    <MdDelete size={16} /> Delete
+                                </button>
+                            </div>
+                        </div>
                     </div>
-
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        Next
-                    </button>
-                </div>
-
-
+                ))}
             </div>
         </div>
+
     )
 }
 

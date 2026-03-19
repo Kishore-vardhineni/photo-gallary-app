@@ -4,33 +4,8 @@ import toast from "react-hot-toast";
 import { getAllPhotos } from "../services/authService";
 
 const AdminPhotos = () => {
-    const initialPhotos = [
-        {
-            title: "Tropical Paradise",
-            category: "Nature",
-            author: "Mark Smith",
-            date: "Apr 25, 2025",
-            size: "2.4 MB",
-            status: "Published",
-        },
-        {
-            title: "Mountain Sunrise",
-            category: "Landscape",
-            author: "Sarah J.",
-            date: "Apr 24, 2025",
-            size: "1.8 MB",
-            status: "Published",
-        },
-        {
-            title: "City Lights",
-            category: "Urban",
-            author: "Alex Brown",
-            date: "Apr 22, 2025",
-            size: "3.1 MB",
-            status: "Draft",
-        },
-    ];
-    const [photos, setPhotos] = useState(initialPhotos);
+
+    const [photos, setPhotos] = useState([0]);
     const [selected, setSelected] = useState([]);
 
     const selectAllRef = useRef();
@@ -86,7 +61,7 @@ const AdminPhotos = () => {
 
     return (
         <div className="bg-white rounded-xl shadow p-4 sm:p-6">
-            
+
             {/* Bulk Action Bar */}
             {selected.length > 0 && (
                 <div className="mb-4 flex justify-between items-center bg-yellow-50 p-3 rounded-lg">
@@ -200,6 +175,9 @@ const AdminPhotos = () => {
                     </tbody>
                 </table>
             </div>
+
+           
+
         </div>
 
     )

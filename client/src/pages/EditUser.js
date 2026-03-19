@@ -1,13 +1,9 @@
 import { NavLink } from "react-router-dom"
-import Topbar from "../components/Sidebar/Topbar"
 
 
 const EditUser = () => {
     return (
         <div class="bg-gray-100 min-h-screen">
-
-            {/* Topbar */}
-            <Topbar />
 
             <div class="flex items-center justify-between px-8 py-4 bg-gray-100 border-b">
 
