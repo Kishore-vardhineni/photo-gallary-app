@@ -44,11 +44,11 @@ const AdminPhotos = () => {
         };
 
 
-        if (selected.length > 0 && selected.length < photos.length) {
-            selectAllRef.current.indeterminate = true;
-        } else {
-            selectAllRef.current.indeterminate = false;
-        }
+        // if (selected.length > 0 && selected.length < photos.length) {
+        //     selectAllRef.current.indeterminate = true;
+        // } else {
+        //     selectAllRef.current.indeterminate = false;
+        // }
         fetchUsers();
     }, [selected, photos.length]);
 
@@ -89,94 +89,128 @@ const AdminPhotos = () => {
             </div>
 
 
-            <div className="overflow-x-auto">
-                <table className="min-w-[1100px] w-full text-left">
 
-                    {/* Table Head */}
-                    <thead>
-                        <tr className="border-b text-gray-600 text-sm">
-                            <th className="py-3 px-2">
-                                <input
-                                    type="checkbox"
-                                    ref={selectAllRef}
-                                    onChange={handleSelectAll}
-                                    checked={
-                                        photos.length > 0 && selected.length === photos.length
-                                    }
-                                    className="w-4 h-4 accent-yellow-500"
-                                />
-                            </th>
-                            <th>Preview</th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Author</th>
-                            <th>Upload Date</th>
-                            <th>Size</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
 
-                    {/* Table Body */}
-                    <tbody>
-                        {photos.map((photo) => (
-                            <tr
-                                key={photo._id}
-                                className={`border-b text-sm hover:bg-gray-50 ${selected.includes(photo._id) ? "bg-yellow-50" : ""
-                                    }`}
-                            >
-                                <td className="py-3 px-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={selected.includes(photo._id)}
-                                        onChange={() => handleSelectOne(photo._id)}
-                                        className="w-4 h-4 accent-yellow-500"
-                                    />
-                                </td>
 
-                                <td>
+            <div className="w-full">
+                {/* Mobile Card View */}
+                <div className="block md:hidden">
+                    {photos.length === 0 ? (
+                        <p className="text-center py-10 text-gray-500">No Data Available</p>
+                    ) : (
+                        photos.map((photo, index) => (
+                            <div key={index} className="bg-white shadow rounded-xl p-4 mb-4">
+
+                                {/* Top Section */}
+                                <div className="flex items-center gap-3">
                                     <img
                                         src={photo.url}
-                                        alt="preview"
-                                        className="rounded w-14 h-14 object-cover"
+                                        alt=""
+                                        className="w-14 h-14 rounded-lg object-cover"
                                     />
-                                </td>
+                                    <div>
+                                        <p className="font-semibold text-sm">{photo.title}</p>
+                                        <p className="text-xs text-gray-500">{photo.category}</p>
+                                    </div>
+                                </div>
 
-                                <td className="font-medium">{photo.title}</td>
+                                {/* Details */}
+                                <div className="mt-3 text-sm text-gray-600 space-y-1">
+                                    <p><span className="font-medium">Author:</span> {photo.author}</p>
+                                    <p><span className="font-medium">Date:</span> {photo.date}</p>
+                                    <p><span className="font-medium">Size:</span> {photo.size}</p>
+                                </div>
 
-                                <td>
-                                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">
-                                        {photo.category}
-                                    </span>
-                                </td>
-
-                                <td>{photo.author}</td>
-                                <td>{new Date(photo.uploadDate).toLocaleDateString()}</td>
-                                <td>{(photo.size / 1024 / 1024).toFixed(2)} MB</td>
-
-                                <td>
-                                    <span
-                                        className={`px-3 py-1 rounded-full text-xs ${photo.status === "Published"
-                                            ? "bg-green-100 text-green-700"
-                                            : "bg-yellow-100 text-yellow-700"
-                                            }`}
-                                    >
+                                {/* Status + Actions */}
+                                <div className="flex justify-between items-center mt-4">
+                                    <span className="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full">
                                         {photo.status}
                                     </span>
-                                </td>
 
-                                <td className="flex gap-3">
-                                    <Eye size={18} className="cursor-pointer hover:text-blue-600" />
-                                    <Pencil size={18} className="cursor-pointer hover:text-green-600" />
-                                    <Trash2 size={18} className="cursor-pointer hover:text-red-600" />
-                                </td>
+                                    <div className="flex gap-3">
+                                        <Eye size={18} className="cursor-pointer hover:text-blue-600" />
+                                        <Pencil size={18} className="cursor-pointer hover:text-green-600" />
+                                        <Trash2 size={18} className="cursor-pointer hover:text-red-600" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
+
+                    <table className="w-full">
+                        <thead>
+                            <tr className="text-left text-gray-600 border-b">
+                                <th className="py-3 px-2">
+                                    <input
+                                        type="checkbox"
+                                        ref={selectAllRef}
+                                        onChange={handleSelectAll}
+                                        checked={
+                                            photos.length > 0 && selected.length === photos.length
+                                        }
+                                        className="w-4 h-4 accent-yellow-500"
+                                    />
+                                </th>
+                                <th>Preview</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Author</th>
+                                <th>Upload Date</th>
+                                <th>Size</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
 
-           
+                        <tbody>
+                            {photos.length === 0 ? (
+                                <p className="text-center py-10 text-gray-500">No Data Available</p>
+                            ) : (
+                                photos.map((photo) => (
+                                    <tr key={photo._id}
+                                        className={`border-b text-sm hover:bg-gray-50 ${selected.includes(photo._id) ? "bg-yellow-50" : ""
+                                            }`}>
+                                        <td className="py-3 px-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={selected.includes(photo._id)}
+                                                onChange={() => handleSelectOne(photo._id)}
+                                                className="w-4 h-4 accent-yellow-500"
+                                            />
+                                        </td>
+
+                                        <td>
+                                            <img src={photo.url} alt="preview" className="w-10 h-10 rounded" />
+                                        </td>
+                                        <td>{photo.title}</td>
+                                        <td>
+                                            <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs">
+                                                {photo.category}
+                                            </span>
+                                        </td>
+                                        <td>{photo.author}</td>
+                                        <td>{photo.date}</td>
+                                        <td>{photo.size}</td>
+                                        <td>
+                                            <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs">
+                                                {photo.status}
+                                            </span>
+                                        </td>
+                                        <td className="flex gap-3">
+                                            <Eye size={18} className="cursor-pointer hover:text-blue-600" />
+                                            <Pencil size={18} className="cursor-pointer hover:text-green-600" />
+                                            <Trash2 size={18} className="cursor-pointer hover:text-red-600" />
+                                        </td>
+                                    </tr>
+                                )))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
 

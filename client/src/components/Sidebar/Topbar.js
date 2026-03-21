@@ -101,9 +101,6 @@ const Topbar = ({ setSidebarOpen }) => {
                       alt="profile"
                       className="w-10 h-10 rounded-full border-2 border-gray-300"
                     />
-                    <span className="font-semibold text-gray-700">
-                      {auth.username}
-                    </span>
                   </div>
 
                   {/* Dropdown */}

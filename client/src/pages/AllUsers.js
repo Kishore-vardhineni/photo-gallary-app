@@ -34,8 +34,6 @@ const AllUsers = () => {
 
     return (
 
-
-
         <div className="p-4 lg:p-6 bg-gray-100 min-h-screen">
 
             {/* Header */}
@@ -143,14 +141,17 @@ const AllUsers = () => {
                             />
 
                             {/* Info */}
-                            <div className="flex-1">
-                                <p className="font-semibold text-lg">{user.name}</p>
-                                <p className="text-sm text-gray-500">{user.email}</p>
+                            <div className="flex-1 min-w-0">
+                                {/* Email */}
+                                <p className="text-gray-700 truncate">
+                                    {user.email}
+                                </p>
 
+                                {/* Role */}
                                 <span
                                     className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${user.role === "admin"
-                                            ? "bg-red-100 text-red-500"
-                                            : "bg-green-100 text-green-600"
+                                        ? "bg-red-100 text-red-500"
+                                        : "bg-green-100 text-green-600"
                                         }`}
                                 >
                                     {user.role}

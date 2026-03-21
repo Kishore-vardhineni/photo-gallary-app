@@ -8,8 +8,8 @@ dotenv.config();
 
 const fileUpload = async (req, res) => {
   try {
-     const file = req.file;
-     const { title, category, author, status } = req.body;
+    const file = req.file;
+    const { title, category, author, status } = req.body;
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
@@ -50,20 +50,30 @@ const fileUpload = async (req, res) => {
   }
 }
 
-const getMyFiles = async(req, res) => {
-   try {
-     
-     const files = await File.find({ userId: req.user.id }).sort({ createdAt: -1 });
+const getMyFiles = async (req, res) => {
+  try {
 
-     if(!files) {
-       return res.status(404).json({ message: "No files found" });
-     }
+    if (req.user.role === 'admin') {
+      // ✅ Admin → get ALL files
+      files = await File.find().sort({ createdAt: -1 });
 
-     if(files[0].userId.toString() !== req.user.id) {
-       return res.status(403).json({ message: "Unauthorized access" });
-     }
+    } else {
+      // ✅ Normal user → only their files
+      files = await File.find({ userId: req.user.id })
+        .sort({ createdAt: -1 });
+    }
 
-     const filesWithUrls = await Promise.all(
+    //  const files = await File.find({ userId: req.user.id }).sort({ createdAt: -1 });
+
+    if (!files) {
+      return res.status(404).json({ message: "No files found" });
+    }
+
+    //  if(files[0].userId.toString() !== req.user.id) {
+    //    return res.status(403).json({ message: "Unauthorized access" });
+    //  }
+
+    const filesWithUrls = await Promise.all(
       files.map(async (file) => {
         const command = new GetObjectCommand({
           Bucket: process.env.AWS_S3_BUCKET,
@@ -93,14 +103,14 @@ const getMyFiles = async(req, res) => {
       })
     );
 
-     console.log("Files with", filesWithUrls);
+    console.log("Files with", filesWithUrls);
 
-     res.status(200).json({ message: "Getting the files", filedetails: filesWithUrls });
-     
+    res.status(200).json({ message: "Getting the files", filedetails: filesWithUrls });
 
-   } catch (err) {
-       res.status(500).json({ message: "Error generating URL" });
-   }
+
+  } catch (err) {
+    res.status(500).json({ message: "Error generating URL" });
+  }
 }
 
 module.exports = { fileUpload, getMyFiles };

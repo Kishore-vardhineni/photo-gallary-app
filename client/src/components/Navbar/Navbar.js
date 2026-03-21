@@ -39,13 +39,11 @@ const Navbar = () => {
           {/* Logo Section */}
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              <div className="flex items-center justify-center"> 
-                <img src={logo} className="w-16 h-16" alt="logo" /> </div>
               <img
-                      src={logo}
-                      alt="logo"
-                      className="w-10 h-10 rounded-full border-2 border-gray-300"
-                    />
+                src={logo}
+                alt="logo"
+                className="w-10 h-10 rounded-full border-2 border-gray-300"
+              />
             </div>
 
             <div>
@@ -84,7 +82,7 @@ const Navbar = () => {
                 </button>
 
                 <button className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition">
-                 
+
                   <NavLink to="/signup">Signup</NavLink>
                 </button>
               </>
@@ -118,6 +116,7 @@ const Navbar = () => {
                 <button className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition">
                   <NavLink to="/signup">Signup</NavLink>
                 </button>
+
                 <div className="relative" ref={dropdownRef}>
                   <div
                     onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -128,9 +127,6 @@ const Navbar = () => {
                       alt="profile"
                       className="w-10 h-10 rounded-full border-2 border-gray-300"
                     />
-                    <span className="font-semibold text-gray-700">
-                      {auth.username}
-                    </span>
                   </div>
 
                   {/* Dropdown */}
@@ -207,35 +203,111 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {mobileOpen && (
           <div className="md:hidden bg-white shadow-lg px-6 pb-6 space-y-4">
-            <a href="/" className="block text-gray-700 font-medium">
-              Home
-            </a>
-            <a href="/about" className="block text-gray-700 font-medium">
-              About Us
-            </a>
-            <a href="/contact" className="block text-gray-700 font-medium">
-              Contact
-            </a>
+            {!auth && (
+              <>
+                <NavLink to="/" className="block text-gray-700 font-medium">
+                  Home
+                </NavLink>
+
+                <NavLink to="/about" className="block text-gray-700 font-medium">
+                  About Us
+                </NavLink>
+
+                <NavLink to="/contact" className="block text-gray-700 font-medium">
+                  Contact
+                </NavLink>
+                <button
+                  onClick={login}
+                  className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition block"
+                >
+                  <NavLink to="/signin">Signin</NavLink>
+                </button>
+
+                <button className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition">
+
+                  <NavLink to="/signup">Signup</NavLink>
+                </button>
+              </>
+            )}
 
             <div className="border-t pt-4">
-              <div className="flex items-center space-x-3 mb-4">
-                <img
-                  src="https://i.pravatar.cc/150?img=3"
-                  alt="profile"
-                  className="w-10 h-10 rounded-full"
-                />
-                <span className="font-semibold">Kishore</span>
-              </div>
+              {auth && (
+                <>
+                  {/* User Showing homepage */}
+                  {auth.role === "user" && (
+                    <NavLink to="/" className="block text-gray-700 font-medium hover:text-yellow-500">
+                      Home
+                    </NavLink>
+                  )}
 
-              <a href="/admin" className="block py-2">
-                Admin Dashboard
-              </a>
-              <a href="/dashboard" className="block py-2">
-                My Dashboard
-              </a>
-              <button className="text-red-500 font-semibold mt-2">
-                Logout
-              </button>
+                  {/* User Showing aboutpage */}
+                  {auth.role === "user" && (
+                    <NavLink to="/about" className="block text-gray-700 font-medium hover:text-yellow-500">
+                      About US
+                    </NavLink>
+                  )}
+
+                  {/* User Showing contactpage */}
+                  {auth.role === "user" && (
+                    <NavLink to="/contact" className="block text-gray-700 font-medium hover:text-yellow-500">
+                      Contact
+                    </NavLink>
+                  )}
+
+                  <button className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition">
+                    <NavLink to="/signup">Signup</NavLink>
+                  </button>
+                  
+                  <div className="flex items-center space-x-3 mb-4">
+                    <img
+                      src="https://i.pravatar.cc/150?img=3"
+                      alt="profile"
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-lg text-gray-800 truncate">
+                        {auth?.username}
+                      </h3>
+
+                      <p className="text-gray-500 text-sm break-all sm:truncate">
+                        {auth?.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <hr className="mb-4 border-t border-gray-200" />
+
+                  {/* Admin Dashboard */}
+                  {auth?.role === "admin" && (
+                    <NavLink
+                      to="admin/admin-dashboard"
+                      className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      🏢 Admin Dashboard
+                    </NavLink>
+                  )}
+
+                  {/* User Dashboard */}
+                  {auth?.role === "user" && (
+                    <NavLink
+                      to="/user-dashboard"
+                      className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      📁 User Dashboard
+                    </NavLink>
+                  )}
+                  <hr className="my-4" />
+
+                  <div>
+                    <button onClick={logoutFunc} className="text-red-500 py-2 px-2 rounded-lg hover:bg-red-50 cursor-pointer transition">
+                      Logout
+                    </button>
+                  </div>
+                </>
+              )}
+
             </div>
           </div>
         )}
