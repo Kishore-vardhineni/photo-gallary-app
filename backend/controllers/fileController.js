@@ -63,8 +63,6 @@ const getMyFiles = async (req, res) => {
         .sort({ createdAt: -1 });
     }
 
-    //  const files = await File.find({ userId: req.user.id }).sort({ createdAt: -1 });
-
     if (!files) {
       return res.status(404).json({ message: "No files found" });
     }
@@ -83,8 +81,6 @@ const getMyFiles = async (req, res) => {
         const signedUrl = await getSignedUrl(s3, command, {
           expiresIn: 3600,
         });
-
-        console.log("File", files)
 
         return {
           _id: file._id,
@@ -113,4 +109,15 @@ const getMyFiles = async (req, res) => {
   }
 }
 
-module.exports = { fileUpload, getMyFiles };
+const getTotalPhotos = async (req, res) => {
+  try {
+    const count = await File.countDocuments()
+    res.status(200).json({ totalPhotos: count });
+  } catch (err) {
+     res.status(500).json({
+      message: error.message
+    });
+  }
+}
+
+module.exports = { fileUpload, getMyFiles, getTotalPhotos };

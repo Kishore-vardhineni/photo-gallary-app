@@ -1,16 +1,27 @@
 import { useEffect, useState } from "react";
-import { getTotalUsers } from "../services/authService";
+import { getRecentUsers, getTotalPhotos, getTotalUsers } from "../services/authService";
 import toast from "react-hot-toast";
+import StatCard from "./StatCard";
+import RecentUsers from "./RecentUsers";
 
 export default function AdminDashboard() {
 
   const [totalUsers, setTotalUsers] = useState([]);
+  const [totalPhotos, setTotalPhotos] = useState([]);
+  const [recentUsers, setRecentUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await getTotalUsers();
-        setTotalUsers(response.data.totalUsers);
+        const usersRes = await getTotalUsers();
+        const photosRes = await getTotalPhotos();
+        const resentUsersRes = await getRecentUsers();
+
+        console.log("recentUsers", recentUsers);
+      
+        setTotalUsers(usersRes.data.totalUsers);
+        setTotalPhotos(photosRes.data.totalPhotos);
+        setRecentUsers(resentUsersRes.data.users);
       } catch (error) {
         console.log(error);
         toast.error(error.response);
@@ -30,9 +41,9 @@ export default function AdminDashboard() {
         <main className="p-6 overflow-y-auto space-y-6">
           {/* Stats */}
           <div className="grid grid-cols-4 gap-6">
-            <StatCard title="Total Users" value={totalUsers} />
-            <StatCard title="Total Photos" value="3420" />
-            <StatCard title="Categories" value="56" />
+            <StatCard title="Total Users" value={totalUsers} route="/admin/all-users"/>
+            <StatCard title="Total Photos" value={totalPhotos} route="/admin/admin-photos" />
+            <StatCard title="Categories" value="56" route="/admin/categories"/>
             <StatCard title="Monthly Views" value="$8,250" />
           </div>
 
@@ -58,12 +69,7 @@ export default function AdminDashboard() {
 
             {/* Recent Users */}
             <div className="bg-white p-6 rounded-xl shadow">
-              <h2 className="text-lg font-semibold mb-4">Recent Users</h2>
-
-              <UserItem name="John Doe" role="Admin" />
-              <UserItem name="Emma Smith" role="User" />
-              <UserItem name="Michael Lee" role="User" />
-              <UserItem name="Sophia Brown" role="User" />
+              <RecentUsers  recentUser={recentUsers}/>
             </div>
           </div>
 
@@ -108,38 +114,6 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-const StatCard = ({ title, value }) => (
-  <div className="bg-white p-6 rounded-xl shadow">
-    <h3 className="text-gray-500 text-sm">{title}</h3>
-    <p className="text-2xl font-bold mt-2">{value}</p>
-  </div>
-);
-
-const UserItem = ({ name, role }) => (
-  <div className="flex items-center justify-between mb-4">
-    <div className="flex items-center gap-3">
-      <img
-        src="https://i.pravatar.cc/40"
-        alt=""
-        className="rounded-full"
-      />
-      <div>
-        <p className="font-medium">{name}</p>
-        <p className="text-sm text-gray-500">example@email.com</p>
-      </div>
-    </div>
-
-    <span
-      className={`px-3 py-1 text-xs rounded-full ${role === "Admin"
-          ? "bg-green-100 text-green-600"
-          : "bg-blue-100 text-blue-600"
-        }`}
-    >
-      {role}
-    </span>
-  </div>
-);
 
 const ActivityItem = ({ text, time }) => (
   <div className="mb-3">

@@ -80,5 +80,23 @@ const getTotalUsers = async (req, res) => {
   }
 }
 
+const getRecentUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .select("username email role");
 
-module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, deleteByUserId, getTotalUsers };
+    res.status(200).json({
+      success: true,
+      users
+    });
+  } catch (err) {
+     res.status(500).json({
+      message: err.message
+    });
+  }
+}
+
+
+module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, deleteByUserId, getTotalUsers, getRecentUsers };
