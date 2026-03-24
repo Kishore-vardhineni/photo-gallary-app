@@ -109,15 +109,13 @@ const getMyFiles = async (req, res) => {
   }
 }
 
-const getTotalPhotos = async (req, res) => {
+const getTotalPhotosCount = async (req, res) => {
   try {
     const count = await File.countDocuments()
-    res.status(200).json({ totalPhotos: count });
+    res.status(200).json({ totalPhotosData: count });
   } catch (err) {
-     res.status(500).json({
-      message: error.message
-    });
+     res.status(500).json({ message: "Error generating URL" });
   }
 }
 
-module.exports = { fileUpload, getMyFiles, getTotalPhotos };
+module.exports = { fileUpload, getMyFiles, getTotalPhotosCount };

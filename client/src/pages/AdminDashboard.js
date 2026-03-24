@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRecentUsers, getTotalPhotos, getTotalUsers } from "../services/authService";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import StatCard from "./StatCard";
 import RecentUsers from "./RecentUsers";
 
@@ -14,17 +14,25 @@ export default function AdminDashboard() {
     const fetchUsers = async () => {
       try {
         const usersRes = await getTotalUsers();
-        const photosRes = await getTotalPhotos();
-        const resentUsersRes = await getRecentUsers();
+        setTotalUsers(usersRes?.data?.totalUsers);
+      } catch (error) {
+        console.log("Users API error:", error);
+      }
 
-        console.log("recentUsers", recentUsers);
-      
-        setTotalUsers(usersRes.data.totalUsers);
-        setTotalPhotos(photosRes.data.totalPhotos);
+      // 👉 Photos API
+      try {
+        const photosRes = await getTotalPhotos();
+        setTotalPhotos(photosRes.data.totalPhotosData);
+      } catch (error) {
+        console.log("Photos API error:", error);
+      }
+
+      // 👉 Recent Users API
+      try {
+        const resentUsersRes = await getRecentUsers();
         setRecentUsers(resentUsersRes.data.users);
       } catch (error) {
-        console.log(error);
-        toast.error(error.response);
+        console.log("Recent Users API error:", error);
       }
     };
 
@@ -41,9 +49,9 @@ export default function AdminDashboard() {
         <main className="p-6 overflow-y-auto space-y-6">
           {/* Stats */}
           <div className="grid grid-cols-4 gap-6">
-            <StatCard title="Total Users" value={totalUsers} route="/admin/all-users"/>
+            <StatCard title="Total Users" value={totalUsers} route="/admin/all-users" />
             <StatCard title="Total Photos" value={totalPhotos} route="/admin/admin-photos" />
-            <StatCard title="Categories" value="56" route="/admin/categories"/>
+            <StatCard title="Categories" value="56" route="/admin/categories" />
             <StatCard title="Monthly Views" value="$8,250" />
           </div>
 
@@ -69,7 +77,7 @@ export default function AdminDashboard() {
 
             {/* Recent Users */}
             <div className="bg-white p-6 rounded-xl shadow">
-              <RecentUsers  recentUser={recentUsers}/>
+              <RecentUsers recentUser={recentUsers} />
             </div>
           </div>
 
