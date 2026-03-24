@@ -109,7 +109,7 @@ const getMyFiles = async (req, res) => {
   }
 }
 
-const getTotalPhotosCount = async (req, res) => {
+const getTotalPhotos = async (req, res) => {
   try {
     const count = await File.countDocuments()
     res.status(200).json({ totalPhotosData: count });
@@ -118,4 +118,4 @@ const getTotalPhotosCount = async (req, res) => {
   }
 }
 
-module.exports = { fileUpload, getMyFiles, getTotalPhotosCount };
+module.exports = { fileUpload, getMyFiles, getTotalPhotos };
