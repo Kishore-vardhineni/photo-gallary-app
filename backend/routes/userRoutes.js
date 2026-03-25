@@ -9,6 +9,6 @@ router.get('/getfindbyuserid/:id', getFindByUserId);
 router.put('/getupdatedbyuserid/:id', verifyToken, getUpdatedByUserId);
 router.delete('/deleteByUserId/:id', deleteByUserId);
 router.get('/total-users', verifyToken, getTotalUsers);
-router.get('/recent-users', verifyToken, getRecentUsers)
+router.get('/recent-users', verifyToken, getRecentUsers);
 
 module.exports = router;

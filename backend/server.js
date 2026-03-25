@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const fileRoutes = require('./routes/fileRoutes')
+const fileRoutes = require('./routes/fileRoutes');
 
 const cors = require("cors");
 const dns = require('dns');
@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/files', fileRoutes);
+app.use("/api/files", fileRoutes);
 
 const connect = async () => {
    try {
