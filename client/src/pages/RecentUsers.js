@@ -1,6 +1,6 @@
 const RecentUsers = ({ recentUser }) => {
     return (
-        <div className="bg-white p-4 rounded-xl shadow-sm">
+        <div>
             <h2 className="text-lg font-semibold mb-4">Recent Users</h2>
 
             <div className="space-y-4">

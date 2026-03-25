@@ -113,6 +113,13 @@ const Navbar = () => {
                   </NavLink>
                 )}
 
+                  {/* User Showing contactpage */}
+                {auth.role === "user" && (
+                  <NavLink to="/user-photos" className="hover:text-yellow-500">
+                    UserPhotos
+                  </NavLink>
+                )}
+
                 <button className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition">
                   <NavLink to="/signup">Signup</NavLink>
                 </button>
@@ -251,6 +258,12 @@ const Navbar = () => {
                   {auth.role === "user" && (
                     <NavLink to="/contact" className="block text-gray-700 font-medium hover:text-yellow-500">
                       Contact
+                    </NavLink>
+                  )}
+
+                  {auth.role === "user" && (
+                    <NavLink to="/user-photos" className="hover:text-yellow-500">
+                      UserPhotos
                     </NavLink>
                   )}
 

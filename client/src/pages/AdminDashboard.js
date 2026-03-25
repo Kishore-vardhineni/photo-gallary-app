@@ -14,17 +14,31 @@ export default function AdminDashboard() {
     const fetchUsers = async () => {
       try {
         const usersRes = await getTotalUsers();
-        const photosRes = await getTotalPhotos();
-        const resentUsersRes = await getRecentUsers();
+        setTotalUsers(usersRes?.data?.totalUsers);
+      } catch (error) {
+        if (error.response?.data?.message) {
+          toast.error(error.response?.data?.message);
+        }
+      }
 
-        console.log("recentUsers", recentUsers);
-      
-        setTotalUsers(usersRes.data.totalUsers);
+      // 👉 Photos API
+      try {
+        const photosRes = await getTotalPhotos();
         setTotalPhotos(photosRes.data.totalPhotos);
+      } catch (error) {
+        if (error.response?.data?.message) {
+          toast.error(error.response?.data?.message);
+        }
+      }
+
+      // 👉 Recent Users API
+      try {
+        const resentUsersRes = await getRecentUsers();
         setRecentUsers(resentUsersRes.data.users);
       } catch (error) {
-        console.log(error);
-        toast.error(error.response);
+        if (error.response?.data?.message) {
+          toast.error(error.response?.data?.message);
+        }
       }
     };
 
@@ -40,36 +54,53 @@ export default function AdminDashboard() {
         {/* Content */}
         <main className="p-6 overflow-y-auto space-y-6">
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-6">
-            <StatCard title="Total Users" value={totalUsers} route="/admin/all-users"/>
-            <StatCard title="Total Photos" value={totalPhotos} route="/admin/admin-photos" />
-            <StatCard title="Categories" value="56" route="/admin/categories"/>
-            <StatCard title="Monthly Views" value="$8,250" />
+
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+            <div className="bg-white rounded-xl shadow p-5">
+              <StatCard title="Total Users" value={totalUsers} route="/admin/all-users" />
+            </div>
+
+            <div className="bg-white rounded-xl shadow p-5">
+              <StatCard title="Total Photos" value={totalPhotos} route="/admin/admin-photos" />
+            </div>
+
+            <div className="bg-white rounded-xl shadow p-5">
+              <StatCard title="Categories" value="56" route="/admin/categories" />
+            </div>
+
+            <div className="bg-white rounded-xl shadow p-5">
+              <StatCard title="Monthly Views" value="$8,250" />
+            </div>
+
           </div>
 
-          {/* Middle Section */}
-          <div className="grid grid-cols-3 gap-6">
-            {/* Chart */}
-            <div className="col-span-2 bg-white p-6 rounded-xl shadow">
-              <h2 className="text-lg font-semibold mb-4">
-                User Growth (Last 6 Months)
-              </h2>
 
-              {/* Fake chart */}
-              <div className="h-64 bg-gray-100 rounded-lg flex items-end p-6 gap-4">
-                {[100, 300, 250, 350, 550, 780].map((height, i) => (
+          {/* MIDDLE SECTION */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+            {/* CHART */}
+            <div className="lg:col-span-2 bg-white rounded-xl shadow p-5">
+              <h3 className="text-lg font-semibold mb-4">
+                User Growth (Last 6 Months)
+              </h3>
+
+              {/* Chart Placeholder */}
+              <div className="h-64 bg-gray-100 rounded-lg flex items-end justify-around p-4">
+                {[20, 40, 30, 50, 70, 90].map((val, i) => (
                   <div
                     key={i}
-                    className="bg-blue-500 w-8 rounded-t"
-                    style={{ height: `${height / 4}px` }}
-                  />
+                    className="w-6 bg-blue-500 rounded"
+                    style={{ height: `${val}%` }}
+                  ></div>
                 ))}
               </div>
             </div>
 
             {/* Recent Users */}
             <div className="bg-white p-6 rounded-xl shadow">
-              <RecentUsers  recentUser={recentUsers}/>
+              <RecentUsers recentUser={recentUsers} />
             </div>
           </div>
 
@@ -108,6 +139,7 @@ export default function AdminDashboard() {
               <StatusItem label="Database" status="Connected" green />
               <StatusItem label="Storage" status="76% Used" />
             </div>
+            
           </div>
         </main>
       </div>

@@ -41,14 +41,14 @@ const AllUsers = () => {
                 <h2 className="text-2xl font-semibold">All Users</h2>
 
                 <div className="flex gap-2">
-                     <FiSearch className="absolute left-3 top-3 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search users..."
-                            className="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                    <FiSearch className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search users..."
+                        className="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
 
                 </div>
             </div>
@@ -66,7 +66,7 @@ const AllUsers = () => {
             {/* ========================= */}
             {/* ✅ Desktop TABLE VIEW */}
             {/* ========================= */}
-            <div className="hidden lg:block bg-white rounded-xl shadow overflow-hidden">
+            <div className="hidden lg:block bg-white rounded-xl shadow">
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 border-b">
                         <tr className="text-gray-500 text-sm">
@@ -81,7 +81,7 @@ const AllUsers = () => {
                         {filterdUsers.map((user) => (
                             <tr key={user.id} className="border-b hover:bg-gray-50">
                                 <td className="p-4 flex items-center gap-3">
-                                   <img
+                                    <img
                                         src="https://i.pravatar.cc/150?img=3"
                                         alt={user.username}
                                         className="w-12 h-12 rounded-full object-cover"
@@ -98,8 +98,8 @@ const AllUsers = () => {
                                 <td>
                                     <span
                                         className={`px-3 py-1 text-xs rounded-full ${user.role === "admin"
-                                                ? "bg-red-100 text-red-500"
-                                                : "bg-green-100 text-green-600"
+                                            ? "bg-red-100 text-red-500"
+                                            : "bg-green-100 text-green-600"
                                             }`}
                                     >
                                         {user.role}
@@ -125,58 +125,51 @@ const AllUsers = () => {
             {/* ========================= */}
             {/* ✅ Tablet + Mobile CARD VIEW */}
             {/* ========================= */}
-            <div className="lg:hidden space-y-4">
-                {users.map((user) => (
-                    <div
-                        key={user.id}
-                        className="bg-white rounded-xl p-4 shadow"
-                    >
-                        <div className="flex items-center gap-4">
+            {/* USERS LIST */}
+            <div className="space-y-4">
+                {filterdUsers.length === 0 ? (
+                    <p className="text-center text-gray-500 mt-10">
+                        No Data Available
+                    </p>
+                ) : (
+                    filterdUsers.map((user) => (
+                        <div
+                            key={user.id}
+                            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-md"
+                        >
+                            {/* LEFT */}
+                            <div className="flex items-center gap-4 w-full sm:w-auto">
+                               
+                                <img
+                                    src="https://i.pravatar.cc/150?img=3"
+                                    alt={user.username}
+                                    className="w-12 h-12 rounded-full object-cover"
+                                />
 
-                            {/* Avatar */}
-                            <img
-                                src="https://i.pravatar.cc/150?img=3"
-                                alt={user.username}
-                                className="w-12 h-12 rounded-full object-cover"
-                            />
+                                <div className="min-w-0">
+                                    <p className="text-gray-800 font-medium truncate">
+                                        {user.email}
+                                    </p>
 
-                            {/* Info */}
-                            <div className="flex-1 min-w-0">
-                                {/* Email */}
-                                <p className="text-gray-700 truncate">
-                                    {user.email}
-                                </p>
-
-                                {/* Role */}
-                                <span
-                                    className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${user.role === "admin"
-                                        ? "bg-red-100 text-red-500"
-                                        : "bg-green-100 text-green-600"
-                                        }`}
-                                >
-                                    {user.role}
-                                </span>
+                                    <span className="inline-block mt-1 px-3 py-1 text-sm bg-red-100 text-red-500 rounded-full">
+                                        {user.role}
+                                    </span>
+                                </div>
                             </div>
 
-                            {/* Actions */}
-                            <div className="flex flex-col gap-2">
-                                <button
-                                    onClick={() => navigate(`/admin/edit-user/${user._id}`)}
-                                    className="flex items-center gap-2 border px-3 py-1 rounded-md text-sm hover:bg-gray-100"
-                                >
-                                    <FiEdit size={14} />
-                                    <span>Edit</span>
+                            {/* RIGHT BUTTONS */}
+                            <div className="flex gap-2 w-full sm:w-auto">
+                                <button className="flex-1 sm:flex-none px-3 py-2 border rounded-lg hover:bg-gray-100">
+                                    ✏️ Edit
                                 </button>
-                                <button
-                                    onClick={() => navigate(`/admin/edit-user/${user._id}`)}
-                                    className="flex items-center gap-2 border px-3 py-1 rounded-md text-sm hover:bg-gray-100"
-                                >
-                                    <MdDelete size={16} /> Delete
+
+                                <button className="flex-1 sm:flex-none px-3 py-2 border rounded-lg hover:bg-red-100 text-red-500">
+                                    🗑 Delete
                                 </button>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
 

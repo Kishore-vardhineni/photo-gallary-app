@@ -102,8 +102,6 @@ const getMyFiles = async (req, res) => {
     console.log("Files with", filesWithUrls);
 
     res.status(200).json({ message: "Getting the files", filedetails: filesWithUrls });
-
-
   } catch (err) {
     res.status(500).json({ message: "Error generating URL" });
   }
@@ -120,4 +118,60 @@ const getTotalPhotos = async (req, res) => {
   }
 }
 
-module.exports = { fileUpload, getMyFiles, getTotalPhotos };
+const getPhotoFindById = async (req, res) => {
+  try {
+    if (req.user.role === 'admin') {
+      // ✅ Admin → get ALL files
+      files = await File.find().sort({ createdAt: -1 });
+
+    } else {
+      // ✅ Normal user → only their files
+      files = await File.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    }
+
+    if (!files || files.length === 0) {
+      return res.status(200).json({ message: "No files found" });
+    }
+
+    if (files[0].userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
+
+    const filesWithUrls = await Promise.all(
+      files.map(async (file) => {
+        const command = new GetObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: file.key,
+        });
+
+        const signedUrl = await getSignedUrl(s3, command, {
+          expiresIn: 3600,
+        });
+
+        return {
+          _id: file._id,
+          url: signedUrl,
+          userid: file._userid,
+          title: file.title,
+          category: file.category,
+          author: file.author,
+          key: file.key,
+          uploadDate: file.uploadDate,
+          size: file.size,
+          status: file.status,
+          fileType: file.mimetype,
+          createdAt: file.createdAt
+        };
+      })
+    );
+
+    console.log("Files with", filesWithUrls);
+
+    res.status(200).json({ message: "Getting the files", filedetails: filesWithUrls });
+
+  } catch (err) {
+
+  }
+}
+
+module.exports = { fileUpload, getMyFiles, getTotalPhotos, getPhotoFindById };

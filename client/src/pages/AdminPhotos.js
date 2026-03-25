@@ -38,8 +38,9 @@ const AdminPhotos = () => {
 
                 setPhotos(res.data.filedetails);
             } catch (error) {
-                console.log(error);
-                toast.error(error.response);
+                if (error.response?.data?.message) {
+                    toast.error(error.response?.data?.message);
+                }
             }
         };
 
@@ -105,7 +106,7 @@ const AdminPhotos = () => {
                                 <div className="flex items-center gap-3">
                                     <img
                                         src={photo.url}
-                                        alt=""
+                                        alt="admin-photo"
                                         className="w-14 h-14 rounded-lg object-cover"
                                     />
                                     <div>
@@ -117,7 +118,7 @@ const AdminPhotos = () => {
                                 {/* Details */}
                                 <div className="mt-3 text-sm text-gray-600 space-y-1">
                                     <p><span className="font-medium">Author:</span> {photo.author}</p>
-                                    <p><span className="font-medium">Date:</span> {photo.date}</p>
+                                    <p><span className="font-medium">Date:</span> {photo.uploadDate}</p>
                                     <p><span className="font-medium">Size:</span> {photo.size}</p>
                                 </div>
 
