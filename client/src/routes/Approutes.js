@@ -16,6 +16,7 @@ import ResetPassword from "../pages/ResetPassword";
 import ChangePassword from "../pages/ChangePassword";
 import SettingsLayout from "../pages/SettingsLayout";
 import EditUser from "../pages/EditUser";
+import UserPhotos from "../pages/UserPhotos";
 
 const AppRoutes = () => {
   return (
@@ -34,7 +35,15 @@ const AppRoutes = () => {
             </ProtectedRoutes>
           }
           />
+
+            <Route path="/user-photos" element={
+            <ProtectedRoutes allowedRole="user">
+              <UserPhotos />
+            </ProtectedRoutes>
+          }
+          />
         </Route>
+        
 
         {/* ================= ADMIN LAYOUT ================= */}
       <Route path="/admin" element={<AdminLayout />}>
@@ -89,8 +98,6 @@ const AppRoutes = () => {
         </Route>
 
       </Route>
-
-
 
         {/* Routes WITHOUT Navbar & Footer */}
         <Route path="/signin" element={<Signin />} />

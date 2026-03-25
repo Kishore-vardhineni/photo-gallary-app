@@ -39,5 +39,9 @@ export const getAllPhotos = async () => {
     return axiosInstance.get( `/files/get-files`);
 }
 
+export const getPhotoFindById = async () => {
+    return axiosInstance.get( `/files/getphotofindbyid`);
+}
+
 
 
