@@ -117,9 +117,20 @@ const AdminPhotos = () => {
 
                                 {/* Details */}
                                 <div className="mt-3 text-sm text-gray-600 space-y-1">
-                                    <p><span className="font-medium">Author:</span> {photo.author}</p>
-                                    <p><span className="font-medium">Date:</span> {photo.uploadDate}</p>
-                                    <p><span className="font-medium">Size:</span> {photo.size}</p>
+
+                                    <p><span className="font-medium">Date:</span> {new Date(photo.uploadDate).toLocaleString("en-GB", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: true
+                                    })}</p>
+                                    <p><span className="font-medium">Size:</span> {photo.size > 1024 * 1024
+                                        ? (photo.size / (1024 * 1024)).toFixed(2) + " MB"
+                                        : (photo.size / 1024).toFixed(2) + " KB"}
+                                    </p>
+                                    <p><span className="font-medium">Discription:</span> {photo.description}</p>
                                 </div>
 
                                 {/* Status + Actions */}
@@ -159,9 +170,10 @@ const AdminPhotos = () => {
                                 <th>Preview</th>
                                 <th>Title</th>
                                 <th>Category</th>
-                                <th>Author</th>
                                 <th>Upload Date</th>
                                 <th>Size</th>
+                                <th>Description</th>
+                                <th>Tags</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -193,9 +205,19 @@ const AdminPhotos = () => {
                                                 {photo.category}
                                             </span>
                                         </td>
-                                        <td>{photo.author}</td>
-                                        <td>{photo.date}</td>
-                                        <td>{photo.size}</td>
+                                        <td>{new Date(photo.uploadDate).toLocaleString("en-GB", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            hour12: true
+                                        })}</td>
+                                        <td>{photo.size > 1024 * 1024
+                                            ? (photo.size / (1024 * 1024)).toFixed(2) + " MB"
+                                            : (photo.size / 1024).toFixed(2) + " KB"}</td>
+                                        <td>{photo.description}</td>
+                                        <td>{photo.tags}</td>
                                         <td>
                                             <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs">
                                                 {photo.status}

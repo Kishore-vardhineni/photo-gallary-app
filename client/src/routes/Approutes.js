@@ -17,6 +17,7 @@ import ChangePassword from "../pages/ChangePassword";
 import SettingsLayout from "../pages/SettingsLayout";
 import EditUser from "../pages/EditUser";
 import UserPhotos from "../pages/UserPhotos";
+import AddUserPhoto from "../pages/AddUserPhoto";
 
 const AppRoutes = () => {
   return (
@@ -36,16 +37,23 @@ const AppRoutes = () => {
           }
           />
 
-            <Route path="/user-photos" element={
+          <Route path="/user-photos" element={
             <ProtectedRoutes allowedRole="user">
               <UserPhotos />
             </ProtectedRoutes>
           }
           />
+
+          <Route
+            path="add-photo"
+            element={
+              <ProtectedRoutes allowedRole="user">
+                <AddUserPhoto />
+              </ProtectedRoutes>
+            }
+          />
         </Route>
         
-
-        {/* ================= ADMIN LAYOUT ================= */}
       <Route path="/admin" element={<AdminLayout />}>
 
         <Route

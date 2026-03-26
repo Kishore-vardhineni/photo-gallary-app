@@ -12,14 +12,21 @@ const fileSchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: String
+        type: String,
+        required: true
     },
-    author: {
+    description: {
         type: String
     },
     key: {
         type: String,
         required: true
+    },
+    tags: {
+        type: String
+    },
+    location: {
+        type: String
     },
     uploadDate: {
         type: Date,
