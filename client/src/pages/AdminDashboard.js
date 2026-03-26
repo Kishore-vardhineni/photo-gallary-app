@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRecentUsers, getTotalPhotos, getTotalUsers } from "../services/authService";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import StatCard from "./StatCard";
 import RecentUsers from "./RecentUsers";
 

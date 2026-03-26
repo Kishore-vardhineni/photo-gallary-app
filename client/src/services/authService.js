@@ -23,7 +23,6 @@ export const getRecentUsers = async () => {
 export const getTotalPhotos = async () => {
     return axiosInstance.get("/files/total-photos")
 }
-
 export const getForgotPassword = async (data) => {
     return axiosInstance.post("/auth/forgot-password", data);
 }
