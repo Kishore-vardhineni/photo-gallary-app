@@ -262,7 +262,7 @@ const Navbar = () => {
                   )}
 
                   {auth.role === "user" && (
-                    <NavLink to="/user-photos" className="hover:text-yellow-500">
+                    <NavLink to="/user-photos" className="block text-gray-700 font-medium hover:text-yellow-500">
                       UserPhotos
                     </NavLink>
                   )}

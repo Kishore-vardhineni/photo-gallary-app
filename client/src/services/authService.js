@@ -44,5 +44,20 @@ export const getPhotoFindById = async () => {
     return axiosInstance.get( `/files/getphotofindbyid`);
 }
 
+export const getUplaodFile = async (data, onUploadProgress) => {
+    return axiosInstance.post( `/files/upload`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+            );
 
-
+            // send ONLY percentage to component
+            if (onUploadProgress) {
+                onUploadProgress(percentCompleted);
+            }
+        }
+    });
+}

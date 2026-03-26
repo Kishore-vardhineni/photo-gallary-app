@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast";
 import { getPhotoFindById } from "../services/authService";
+import { NavLink } from "react-router-dom";
 
 
 const UserPhotos = () => {
@@ -13,7 +14,6 @@ const UserPhotos = () => {
       try {
         const res = await getPhotoFindById();
         setUserPhoto(res?.data?.filedetails || []);
- 
       } catch (error) {
          if (error.response?.data?.message) {
         toast.error(error.response?.data?.message);
@@ -44,7 +44,7 @@ const UserPhotos = () => {
       px-4 py-2 rounded-xl shadow
       w-full sm:w-auto
     ">
-          + Add Photo
+          <NavLink to="/add-photo">Add Photo</NavLink>
         </button>
       </div>
 

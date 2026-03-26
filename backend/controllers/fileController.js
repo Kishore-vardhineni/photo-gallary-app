@@ -9,7 +9,7 @@ dotenv.config();
 const fileUpload = async (req, res) => {
   try {
     const file = req.file;
-    const { title, category, author, status } = req.body;
+    const { title, category, description, tags, location, status } = req.body;
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
@@ -31,12 +31,14 @@ const fileUpload = async (req, res) => {
       userId: req.user.id,
       title,
       category,
-      author,
-      status: status || "Published",
+      description,
+      key,
+      tags,
+      location,
       uploadDate: new Date(),
       size: file.size,
+      status: status || "Published",
       fileType: file.mimetype,
-      key,
       url: fileUrl
     });
 
@@ -88,9 +90,11 @@ const getMyFiles = async (req, res) => {
           userid: file._userid,
           title: file.title,
           category: file.category,
-          author: file.author,
+          description: file.description,
           key: file.key,
           uploadDate: file.uploadDate,
+          tags: file.tags,
+          location: file.location,
           size: file.size,
           status: file.status,
           fileType: file.mimetype,
@@ -154,7 +158,7 @@ const getPhotoFindById = async (req, res) => {
           userid: file._userid,
           title: file.title,
           category: file.category,
-          author: file.author,
+          description: file.description,
           key: file.key,
           uploadDate: file.uploadDate,
           size: file.size,
