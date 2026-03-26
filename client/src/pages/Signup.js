@@ -16,13 +16,34 @@ export const Signup = () => {
   const { register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
+    watch
   } = useForm({
     resolver: yupResolver(signupSchema),
     defaultValues: {
       role: "user",
     },
   });
+
+  const password = watch("password") || "";
+
+  const checks = {
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    special: /[@$!%*?&]/.test(password),
+    length: password.length >= 8
+  };
+
+  const Rule = ({ valid, text }) => (
+    <p
+      className={`flex items-center gap-2 text-sm transition-all duration-200 ${valid ? "text-green-600" : "text-gray-400"
+        }`}
+    >
+      <span>{valid ? "✔" : "○"}</span>
+      {text}
+    </p>
+  );
 
   const onSubmit = async (data) => {
     try {
@@ -38,7 +59,7 @@ export const Signup = () => {
   }
 
   return (
-     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
       {/* FORM SECTION */}
       <div className="flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
@@ -133,6 +154,14 @@ export const Signup = () => {
                 </button>
               </div>
               <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
+            </div>
+
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+              <Rule valid={checks.uppercase} text="1 Uppercase letter" />
+              <Rule valid={checks.lowercase} text="1 Lowercase letter" />
+              <Rule valid={checks.number} text="1 Number" />
+              <Rule valid={checks.special} text="1 Special character" />
+              <Rule valid={checks.length} text="Minimum 8 characters" />
             </div>
 
             {/* Confirm Password */}

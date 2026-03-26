@@ -19,13 +19,35 @@ const Signin = () => {
     register: singin,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
+    watch
   } = useForm({
     resolver: yupResolver(singinSchema),
     defaultValues: {
       role: "user",
     },
   });
+
+  const password = watch("password") || "";
+
+  // password checks
+  const checks = {
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    special: /[@$!%*?&]/.test(password),
+    length: password.length >= 8
+  };
+
+  const Rule = ({ valid, text }) => (
+    <p
+      className={`flex items-center gap-2 text-sm transition-all duration-200 ${valid ? "text-green-600" : "text-gray-400"
+        }`}
+    >
+      <span>{valid ? "✔" : "○"}</span>
+      {text}
+    </p>
+  );
 
   const onSubmit = async (data) => {
     try {
@@ -100,6 +122,15 @@ const Signin = () => {
               <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
             </div>
 
+            {/* Password Rules */}
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+              <Rule valid={checks.uppercase} text="1 Uppercase letter" />
+              <Rule valid={checks.lowercase} text="1 Lowercase letter" />
+              <Rule valid={checks.number} text="1 Number" />
+              <Rule valid={checks.special} text="1 Special character" />
+              <Rule valid={checks.length} text="Minimum 8 characters" />
+            </div>
+
             {/* Remember + Forgot */}
             <div className="flex justify-between items-center text-sm text-gray-600">
               <label className="flex items-center gap-2 cursor-pointer">
@@ -121,8 +152,6 @@ const Signin = () => {
             >
               {isSubmitting ? "Signing In..." : "Sign In"}
             </button>
-
-
 
           </form>
 
