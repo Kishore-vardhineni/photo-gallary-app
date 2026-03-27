@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const fileRoutes = require('./routes/fileRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 
 const cors = require("cors");
 const dns = require('dns');
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/files", fileRoutes);
+app.use('/api/images', imageRoutes);
 
 const connect = async () => {
    try {
