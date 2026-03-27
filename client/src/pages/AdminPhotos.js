@@ -2,6 +2,7 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { getAllPhotos } from "../services/authService";
+import { NavLink } from "react-router-dom";
 
 const AdminPhotos = () => {
 
@@ -82,16 +83,12 @@ const AdminPhotos = () => {
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-4">
                 <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
-                    + Upload
+                     <NavLink to="/admin/admin-upload">+ Upload</NavLink>
                 </button>
                 <button className="border px-4 py-2 rounded-lg text-sm">
                     Manage Categories
                 </button>
             </div>
-
-
-
-
 
             <div className="w-full">
                 {/* Mobile Card View */}
