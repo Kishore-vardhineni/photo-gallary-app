@@ -1,5 +1,5 @@
 import Carousel from "../components/Carousel/Carousel";
-import img1 from "../assets/images/carousel1.jpg";
+import img1 from "../assets/images/ugadi.jpg";
 import img2 from "../assets/images/carousel2.jpg";
 import img3 from "../assets/images/carousel3.jpg";
 
@@ -47,13 +47,13 @@ const Home = () => {
         <div className="grid md:grid-cols-3 gap-6">
 
           <img
-            src={img2}
-            alt="nature"
+            src={img1}
+            alt="mountain"
             className="rounded-lg shadow-lg hover:scale-105 transition"
           />
 
           <img
-            src={img1}
+            src={img2}
             alt="mountain"
             className="rounded-lg shadow-lg hover:scale-105 transition"
           />

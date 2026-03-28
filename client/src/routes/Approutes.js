@@ -18,6 +18,7 @@ import SettingsLayout from "../pages/SettingsLayout";
 import EditUser from "../pages/EditUser";
 import UserPhotos from "../pages/UserPhotos";
 import AddUserPhoto from "../pages/AddUserPhoto";
+import AdminUploadPhotos from "../pages/AdminUploadPhotos";
 
 const AppRoutes = () => {
   return (
@@ -88,6 +89,15 @@ const AppRoutes = () => {
           element={
             <ProtectedRoutes allowedRole="admin">
               <AdminPhotos />
+            </ProtectedRoutes>
+          }
+        />
+
+         <Route
+          path="admin-upload"
+          element={
+            <ProtectedRoutes allowedRole="admin">
+              <AdminUploadPhotos />
             </ProtectedRoutes>
           }
         />
