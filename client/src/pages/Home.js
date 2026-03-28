@@ -1,7 +1,7 @@
 import Carousel from "../components/Carousel/Carousel";
 import img1 from "../assets/images/carousel1.jpg";
 import img2 from "../assets/images/carousel2.jpg";
-import img3 from "../assets/images/carousel3.jpg";
+import img3 from "../assets/images/carousel3.png";
 
 const Home = () => {
   return (
