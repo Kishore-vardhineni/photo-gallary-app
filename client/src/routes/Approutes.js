@@ -19,6 +19,7 @@ import EditUser from "../pages/EditUser";
 import UserPhotos from "../pages/UserPhotos";
 import AddUserPhoto from "../pages/AddUserPhoto";
 import AdminUploadPhotos from "../pages/AdminUploadPhotos";
+import OAuthSuccess from "../pages/OAuthSuccess";
 
 const AppRoutes = () => {
   return (
@@ -122,6 +123,7 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />}/>
       </Routes>
 
     </>

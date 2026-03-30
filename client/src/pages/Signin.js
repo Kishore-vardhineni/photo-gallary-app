@@ -68,6 +68,10 @@ const Signin = () => {
     }
   }
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3001/api/auth/google";
+  };
+  
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
@@ -154,6 +158,29 @@ const Signin = () => {
             </button>
 
           </form>
+
+          {/* OR Divider */}
+          <div className="flex items-center my-6">
+            <div className="flex-1 h-px bg-gray-300"></div>
+            <span className="px-3 text-gray-500 text-sm">OR</span>
+            <div className="flex-1 h-px bg-gray-300"></div>
+          </div>
+
+          {/* Google Button */}
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-3 hover:bg-gray-50 transition"
+          >
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="google"
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 font-medium">
+              Sign in with Google
+            </span>
+          </button>
+
 
           <p className="text-center text-gray-600 mt-6">
             Don’t have an account?

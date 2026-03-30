@@ -5,16 +5,37 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const imageRoutes = require('./routes/imageRoutes');
-
 const cors = require("cors");
 const dns = require('dns');
+const passport = require('passport');
+require("./config/passport");
+const session = require("express-session");
+
 // Force IPv4 if needed (optional) and use Google DNS
 dns.setServers(['8.8.8.8', '8.8.4.4']); 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 app.use(express.json());
 dotenv.config();
+
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // true only in HTTPS
+      httpOnly: true,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("Backend server is running");
