@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         if (storedUser && storedToken) {
            try {
                 setAuth(JSON.parse(storedUser)); // only parse user
-                setAccessToken(storedToken);     // ❌ no JSON.parse here
+                setAccessToken(storedToken);    
             } catch (error) {
                 localStorage.clear(); // clear corrupted data
             }
