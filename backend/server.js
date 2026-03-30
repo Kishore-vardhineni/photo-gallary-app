@@ -10,27 +10,24 @@ const dns = require('dns');
 const passport = require('passport');
 require("./config/passport");
 const session = require("express-session");
+dotenv.config();
 
 // Force IPv4 if needed (optional) and use Google DNS
 dns.setServers(['8.8.8.8', '8.8.4.4']); 
 
 const app = express();
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "http://13.127.122.73.nip.io",
   credentials: true
 }));
 app.use(express.json());
-dotenv.config();
+
 
 app.use(
   session({
     secret: "secret",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: false, // true only in HTTPS
-      httpOnly: true,
-    },
   })
 );
 
