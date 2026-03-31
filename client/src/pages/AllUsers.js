@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiSearch, FiEdit } from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { getAllUsers } from "../services/authService";
 import toast from "react-hot-toast";
@@ -9,6 +9,10 @@ const AllUsers = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const usersPerPage = 10;
+
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -25,12 +29,25 @@ const AllUsers = () => {
         fetchUsers();
     }, []);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search]);
 
     const filterdUsers = users.filter((user) =>
         user.username?.toLowerCase().includes(search.toLowerCase()) ||
         user.email?.toLowerCase().includes(search.toLowerCase()) ||
         user.role.toLowerCase().includes(search.toLowerCase())
     );
+
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+
+    const currentUsers = filterdUsers.slice(
+        indexOfFirstUser,
+        indexOfLastUser
+    )
+
+    const totalPages = Math.ceil(filterdUsers.length / usersPerPage);
 
     return (
 
@@ -41,7 +58,7 @@ const AllUsers = () => {
                 <h2 className="text-2xl font-semibold">All Users</h2>
 
                 <div className="flex gap-2">
-                    <FiSearch className="absolute left-3 top-3 text-gray-400" />
+                    {/* <FiSearch className="absolute left-3 top-3 text-gray-400" /> */}
                     <input
                         type="text"
                         placeholder="Search users..."
@@ -78,7 +95,7 @@ const AllUsers = () => {
                     </thead>
 
                     <tbody>
-                        {filterdUsers.map((user) => (
+                        {currentUsers.map((user) => (
                             <tr key={user.id} className="border-b hover:bg-gray-50">
                                 <td className="p-4 flex items-center gap-3">
                                     <img
@@ -120,13 +137,38 @@ const AllUsers = () => {
                         ))}
                     </tbody>
                 </table>
+
+                <div className="hidden lg:flex justify-between items-center mt-6 bg-white px-6 py-4 rounded-xl shadow">
+
+                    <p className="text-sm text-gray-600">
+                        Page {currentPage} of {totalPages}
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                        <button onClick={() => setCurrentPage((prev) => prev - 1)} 
+                            disabled={currentPage === 1}
+                            className="px-3 py-1 boreder rounded-md text-gray-600 hover:ng-gray-100 disabled:opacity-50">Prev
+                        </button>
+
+                        {[...Array(totalPages)].map((_, index) => (
+                            <button key={index} onClick={() => setCurrentPage(index + 1)}
+                            className={`px-3 py-1 rounded-md ${currentPage === index + 1 ? "bg-blue-600 text-white" : "border text-gary-600 hover: bg-gray-100"}`}>{index +1 }</button>
+                        ))}
+
+                        <button onClick={() => setCurrentPage((prev) => prev + 1)} 
+                            disabled={currentPage === totalPages} className="px-3 py-1 boreder rounded-md text-gray-600 hover:ng-gray-100 disabled:opacity-50">Next
+                        </button>
+                    </div>
+
+
+                </div>
             </div>
 
             {/* ========================= */}
             {/* ✅ Tablet + Mobile CARD VIEW */}
             {/* ========================= */}
             {/* USERS LIST */}
-            <div className="space-y-4">
+            <div className="space-y-4 lg:hidden">
                 {filterdUsers.length === 0 ? (
                     <p className="text-center text-gray-500 mt-10">
                         No Data Available
