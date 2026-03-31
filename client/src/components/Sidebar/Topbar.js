@@ -90,81 +90,89 @@ const Topbar = ({ setSidebarOpen }) => {
             alt=""
           /> */}
 
-              <div className="flex items-center gap-2 cursor-pointer">
-                <div className="relative" ref={dropdownRef}>
-                  <div
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center space-x-3 cursor-pointer"
-                  >
-                    <img
-                      src="https://i.pravatar.cc/150?img=3"
-                      alt="profile"
-                      className="w-10 h-10 rounded-full border-2 border-gray-300"
-                    />
-                  </div>
-
-                  {/* Dropdown */}
-                  {dropdownOpen && (
-                    <div className="absolute right-0 mt-4 w-64 bg-white rounded-xl shadow-xl p-4">
-
-                      <div className="flex items-center space-x-3 mb-4">
-                        <img
-                          src="https://i.pravatar.cc/150?img=3"
-                          alt="profile"
-                          className="w-12 h-12 rounded-full"
-                        />
-
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-lg text-gray-800 truncate">
-                            {auth?.username}
-                          </h3>
-
-                          <p className="text-gray-500 text-sm break-all sm:truncate">
-                            {auth?.email}
-                          </p>
-                        </div>
-                      </div>
-
-                      <hr className="mb-4 border-t border-gray-200" />
-
-                      {/* Admin Dashboard */}
-                      {auth.role === "admin" && (
-                        <NavLink
-                          to="admin-dashboard"
-                          className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
-                          onClick={() => setDropdownOpen(false)}
-                        >
-                          🏢 Admin Dashboard
-                        </NavLink>
-                      )}
-
-                      {/* User Dashboard */}
-                      {auth.role === "user" && (
-                        <NavLink
-                          to="/user-dashboard"
-                          className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
-                          onClick={() => setDropdownOpen(false)}
-                        >
-                          📁 User Dashboard
-                        </NavLink>
-                      )}
-                      <hr className="my-4" />
-
-                      <div>
-                        <button onClick={logoutFunc} className="text-red-500 py-2 px-2 rounded-lg hover:bg-red-50 cursor-pointer transition">
-                          Logout
-                        </button>
-                      </div>
-
-                    </div>
-                  )}
-                </div>
+          <div className="flex items-center gap-2 cursor-pointer">
+            <div className="relative" ref={dropdownRef}>
+              <div
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center space-x-3 cursor-pointer"
+              >
+                <img
+                  src={auth?.profilePic}
+                  alt="profile"
+                  className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
+                  onError={(e) => {
+                    e.target.src = `https://ui-avatars.com/api/?name=${auth?.username}`;
+                  }}
+                />
 
               </div>
 
+              {/* Dropdown */}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-4 w-64 bg-white rounded-xl shadow-xl p-4">
+
+                  <div className="flex items-center space-x-3 mb-4">
+                    <img
+                      src={auth?.profilePic}
+                      alt="profile"
+                      className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${auth?.username}`;
+                      }}
+                    />
+
+
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-lg text-gray-800 truncate">
+                        {auth?.username}
+                      </h3>
+
+                      <p className="text-gray-500 text-sm break-all sm:truncate">
+                        {auth?.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <hr className="mb-4 border-t border-gray-200" />
+
+                  {/* Admin Dashboard */}
+                  {auth.role === "admin" && (
+                    <NavLink
+                      to="admin-dashboard"
+                      className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      🏢 Admin Dashboard
+                    </NavLink>
+                  )}
+
+                  {/* User Dashboard */}
+                  {auth.role === "user" && (
+                    <NavLink
+                      to="/user-dashboard"
+                      className="block py-2 px-2 rounded-lg hover:bg-gray-100 transition"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      📁 User Dashboard
+                    </NavLink>
+                  )}
+                  <hr className="my-4" />
+
+                  <div>
+                    <button onClick={logoutFunc} className="text-red-500 py-2 px-2 rounded-lg hover:bg-red-50 cursor-pointer transition">
+                      Logout
+                    </button>
+                  </div>
+
+                </div>
+              )}
             </div>
-          
+
+          </div>
+
         </div>
+
+      </div>
 
     </header>
 

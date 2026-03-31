@@ -12,6 +12,14 @@ export const getAllUsers = async () => {
     return axiosInstance.get("/users/getallusers");
 }
 
+export const getFindByUserId = async (id) => {
+   return axiosInstance.get(`/users/getfindbyuserid/${id}`);
+}
+
+export const getupdatedByUserid = async (id, data) => {
+    return axiosInstance.put(`/users/getupdatedbyuserid/${id}`, data);
+}
+
 export const getTotalUsers = async () => {
     return axiosInstance.get("/users/total-users")
 }
