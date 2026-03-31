@@ -12,8 +12,6 @@ const AllUsers = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 10;
 
-    
-
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -21,8 +19,9 @@ const AllUsers = () => {
                 console.log("data", data.users)
                 setUsers(data.users);
             } catch (error) {
-                console.log(error);
-                toast.error(error.response);
+                if (error.response?.data?.message) {
+                    toast.error(error.response?.data?.message);
+                }
             }
         };
 
@@ -36,7 +35,8 @@ const AllUsers = () => {
     const filterdUsers = users.filter((user) =>
         user.username?.toLowerCase().includes(search.toLowerCase()) ||
         user.email?.toLowerCase().includes(search.toLowerCase()) ||
-        user.role.toLowerCase().includes(search.toLowerCase())
+        user.role.toLowerCase().includes(search.toLowerCase()) ||
+        user.createdAt.toLowerCase().includes(search.toLocaleLowerCase())
     );
 
     const indexOfLastUser = currentPage * usersPerPage;
@@ -58,14 +58,28 @@ const AllUsers = () => {
                 <h2 className="text-2xl font-semibold">All Users</h2>
 
                 <div className="flex gap-2">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            placeholder="Search users..."
+                            className="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+
+                        {/* Search Icon */}
+                        <svg
+                            class="w-5 h-5 text-gray-400 absolute left-3 top-2.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                        </svg>
+                    </div>
                     {/* <FiSearch className="absolute left-3 top-3 text-gray-400" /> */}
-                    <input
-                        type="text"
-                        placeholder="Search users..."
-                        className="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+
 
                 </div>
             </div>
@@ -90,6 +104,7 @@ const AllUsers = () => {
                             <th className="p-4">Name</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Created Date</th>
                             <th className="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -99,13 +114,17 @@ const AllUsers = () => {
                             <tr key={user.id} className="border-b hover:bg-gray-50">
                                 <td className="p-4 flex items-center gap-3">
                                     <img
-                                        src="https://i.pravatar.cc/150?img=3"
-                                        alt={user.username}
-                                        className="w-12 h-12 rounded-full object-cover"
+                                        src={user?.profilePic || "https://i.pravatar.cc/150?img=3"}
+                                        alt="profile"
+                                        className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
+                                        onError={(e) => {
+                                            e.target.src = `https://ui-avatars.com/api/?name=${user?.username}`;
+                                        }}
                                     />
 
+
                                     <div>
-                                        <p className="font-medium">{user.name}</p>
+                                        <p className="font-medium">{user.username}</p>
                                         <p className="text-sm text-gray-400">{user.email}</p>
                                     </div>
                                 </td>
@@ -122,6 +141,15 @@ const AllUsers = () => {
                                         {user.role}
                                     </span>
                                 </td>
+
+                                <td>{new Date(user.createdAt).toLocaleString("en-GB", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true
+                                })}</td>
 
                                 <td className="px-6 py-4 flex gap-3">
                                     <button onClick={() => navigate(`/admin/edit-user/${user._id}`)} className="flex items-center gap-1 px-3 py-1 border rounded-md text-gray-600 hover:bg-gray-100">
@@ -145,17 +173,17 @@ const AllUsers = () => {
                     </p>
 
                     <div className="flex items-center gap-2">
-                        <button onClick={() => setCurrentPage((prev) => prev - 1)} 
+                        <button onClick={() => setCurrentPage((prev) => prev - 1)}
                             disabled={currentPage === 1}
                             className="px-3 py-1 boreder rounded-md text-gray-600 hover:ng-gray-100 disabled:opacity-50">Prev
                         </button>
 
                         {[...Array(totalPages)].map((_, index) => (
                             <button key={index} onClick={() => setCurrentPage(index + 1)}
-                            className={`px-3 py-1 rounded-md ${currentPage === index + 1 ? "bg-blue-600 text-white" : "border text-gary-600 hover: bg-gray-100"}`}>{index +1 }</button>
+                                className={`px-3 py-1 rounded-md ${currentPage === index + 1 ? "bg-blue-600 text-white" : "border text-gary-600 hover: bg-gray-100"}`}>{index + 1}</button>
                         ))}
 
-                        <button onClick={() => setCurrentPage((prev) => prev + 1)} 
+                        <button onClick={() => setCurrentPage((prev) => prev + 1)}
                             disabled={currentPage === totalPages} className="px-3 py-1 boreder rounded-md text-gray-600 hover:ng-gray-100 disabled:opacity-50">Next
                         </button>
                     </div>
@@ -181,27 +209,50 @@ const AllUsers = () => {
                         >
                             {/* LEFT */}
                             <div className="flex items-center gap-4 w-full sm:w-auto">
-                               
+
                                 <img
-                                    src="https://i.pravatar.cc/150?img=3"
-                                    alt={user.username}
-                                    className="w-12 h-12 rounded-full object-cover"
+                                    src={user?.profilePic || "https://i.pravatar.cc/150?img=3"}
+                                    alt="profile"
+                                    className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
+                                    onError={(e) => {
+                                        e.target.src = `https://ui-avatars.com/api/?name=${user?.username}`;
+                                    }}
                                 />
 
                                 <div className="min-w-0">
                                     <p className="text-gray-800 font-medium truncate">
-                                        {user.email}
+                                        {user.username}
                                     </p>
 
-                                    <span className="inline-block mt-1 px-3 py-1 text-sm bg-red-100 text-red-500 rounded-full">
-                                        {user.role}
+                                    <span className="inline-block mt-1 px-3 py-1 text-sm  rounded-full">
+                                        {user.email}
                                     </span>
                                 </div>
                             </div>
 
+                            {/* Right Section */}
+                            <div className="flex flex-row sm:items-end text-sm text-gray-600 gap-6">
+                                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs w-fit">
+                                    {user.role}
+                                </span>
+
+                                {/* Created Date */}
+                                <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                                    {new Date(user.createdAt).toLocaleString("en-GB", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: true
+                                    })}
+                                </p>
+
+                            </div>
+
                             {/* RIGHT BUTTONS */}
                             <div className="flex gap-2 w-full sm:w-auto">
-                                <button className="flex-1 sm:flex-none px-3 py-2 border rounded-lg hover:bg-gray-100">
+                                <button onClick={() => navigate(`/admin/edit-user/${user._id}`)} className="flex-1 sm:flex-none px-3 py-2 border rounded-lg hover:bg-gray-100">
                                     ✏️ Edit
                                 </button>
 
