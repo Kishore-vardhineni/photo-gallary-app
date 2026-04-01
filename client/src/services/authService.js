@@ -20,6 +20,10 @@ export const getupdatedByUserid = async (id, data) => {
     return axiosInstance.put(`/users/getupdatedbyuserid/${id}`, data);
 }
 
+export const getDeleteByUserId = async (id) => {
+    return axiosInstance.delete(`/users/deleteByUserId/${id}`);
+}
+
 export const getTotalUsers = async () => {
     return axiosInstance.get("/users/total-users")
 }

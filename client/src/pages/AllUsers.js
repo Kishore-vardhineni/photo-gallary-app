@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import { getAllUsers } from "../services/authService";
+import { getAllUsers, getDeleteByUserId } from "../services/authService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import DeletePopupUser from "./DeletePopupUser";
 
 const AllUsers = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 10;
 
@@ -48,6 +51,28 @@ const AllUsers = () => {
     )
 
     const totalPages = Math.ceil(filterdUsers.length / usersPerPage);
+
+    const handleDeleteConfirm = async () => {
+        try {
+            const response = await getDeleteByUserId(selectedUserId);
+            toast.success(response.data.message);
+            setUsers((prev) =>
+                prev.filter((u) => u._id !== selectedUserId)
+            );
+
+            setShowModal(false);
+
+            setSelectedUserId(null);
+        } catch (error) {
+            if (error.response?.data?.message) {
+                toast.error(error.response?.data?.message);
+            }
+        }
+    }
+
+    // const onDeletConfirm = () => {
+    //     alert("delete the user");
+    // }
 
     return (
 
@@ -94,9 +119,7 @@ const AllUsers = () => {
 
 
 
-            {/* ========================= */}
             {/* ✅ Desktop TABLE VIEW */}
-            {/* ========================= */}
             <div className="hidden lg:block bg-white rounded-xl shadow">
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 border-b">
@@ -156,7 +179,14 @@ const AllUsers = () => {
                                         <FiEdit size={14} /> Edit
                                     </button>
 
-                                    <button className="flex items-center gap-1 px-3 py-1 border rounded-md text-red-500 hover:bg-red-50">
+                                    <button
+                                        onClick={() => {
+                                            // onDeletConfirm()
+                                            setSelectedUserId(user._id);
+                                            setShowModal(true);
+                                        }}
+                                        className="flex items-center gap-1 px-3 py-1 border rounded-md text-red-500 hover:bg-red-50"
+                                    >
                                         <MdDelete size={16} /> Delete
                                     </button>
                                 </td>
@@ -192,10 +222,7 @@ const AllUsers = () => {
                 </div>
             </div>
 
-            {/* ========================= */}
             {/* ✅ Tablet + Mobile CARD VIEW */}
-            {/* ========================= */}
-            {/* USERS LIST */}
             <div className="space-y-4 lg:hidden">
                 {filterdUsers.length === 0 ? (
                     <p className="text-center text-gray-500 mt-10">
@@ -264,9 +291,10 @@ const AllUsers = () => {
                     ))
                 )}
             </div>
-        </div>
 
+            <DeletePopupUser isOpen={showModal} onClose={() => setShowModal(false)} onConfirm={handleDeleteConfirm} />
+        </div>
     )
 }
 
-export default AllUsers
+export default AllUsers;

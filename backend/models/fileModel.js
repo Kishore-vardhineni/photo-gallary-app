@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 const fileSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",   // ✅ FIXED (string name of model)
+        ref: "User", 
         required: true
     },
     title: {
