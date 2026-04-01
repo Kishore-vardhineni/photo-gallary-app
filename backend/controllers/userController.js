@@ -1,4 +1,7 @@
 const User = require("../models/userModel");
+const File = require("../models/fileModel");
+const s3 = require("../middleware/s3Upload");
+const { DeleteObjectsCommand } = require("@aws-sdk/client-s3");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -28,17 +31,15 @@ const getFindByUserId = async (req, res) => {
   }
 };
 
-const getUpdatedByUserId = async (req, res) => {
-  const { id } = req.params;
-
-  if (req.user.id === id) {
+const getUpdatedByUserId = async (req, res) => { 
     try {
+      const { id } = req.params;
       const updatedUser = await User.findByIdAndUpdate(
         id,
         {
           $set: req.body,
         },
-        { new: true, runValidators: true, projection: { password: 0 } }
+        { new: true, runValidators: true, select: "password" }
       );
 
       if (!updatedUser) {
@@ -52,24 +53,47 @@ const getUpdatedByUserId = async (req, res) => {
     } catch (error) {
       return res.status(500).json({ message: "Internal server error" });
     }
-  } else {
-    return res.status(404).json({ message: "User not found" });
-  }
 };
 
-const deleteByUserId = async (req, res) => {
+const getDeleteByUserId = async (req, res) => {
   try {
-    const deleteUser = await User.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
 
-    if (!deleteUser) {
-      return res.status(400).json({ message: "User doesnot existing!" });
-    } else {
-      return res.status(200).json({ message: "User deleted successfully" });
+    const files = await File.find({ userId: id });
+
+    const fileKeys = files.map((file) => file.key);
+
+    if (fileKeys.length > 0) {
+      const deleteParams = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Delete: {
+          Objects: fileKeys.map((key) => ({ Key: key })),
+        },
+      };
+
+      await s3.send(new DeleteObjectsCommand(deleteParams));
     }
+
+    // 4️⃣ Delete files from MongoDB
+    await File.deleteMany({ userId: id });
+
+    // 5️⃣ Delete user
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User does not exist!" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User and all files deleted successfully",
+    });
+
   } catch (err) {
+    console.error(err); // ✅ IMPORTANT for debugging
     return res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
 const getTotalUsers = async (req, res) => {
   try {
@@ -99,4 +123,4 @@ const getRecentUsers = async (req, res) => {
 }
 
 
-module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, deleteByUserId, getTotalUsers, getRecentUsers };
+module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, getDeleteByUserId, getTotalUsers, getRecentUsers };
