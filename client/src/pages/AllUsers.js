@@ -70,10 +70,6 @@ const AllUsers = () => {
         }
     }
 
-    // const onDeletConfirm = () => {
-    //     alert("delete the user");
-    // }
-
     return (
 
         <div className="p-4 lg:p-6 bg-gray-100 min-h-screen">
@@ -181,7 +177,6 @@ const AllUsers = () => {
 
                                     <button
                                         onClick={() => {
-                                            // onDeletConfirm()
                                             setSelectedUserId(user._id);
                                             setShowModal(true);
                                         }}
@@ -283,7 +278,10 @@ const AllUsers = () => {
                                     ✏️ Edit
                                 </button>
 
-                                <button className="flex-1 sm:flex-none px-3 py-2 border rounded-lg hover:bg-red-100 text-red-500">
+                                <button onClick={() => {
+                                            setSelectedUserId(user._id);
+                                            setShowModal(true);
+                                        }} className="flex-1 sm:flex-none px-3 py-2 border rounded-lg hover:bg-red-100 text-red-500">
                                     🗑 Delete
                                 </button>
                             </div>
