@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/images/Photo_Gallary_Logo.png";
 
@@ -10,6 +10,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
+  const location = useLocation();
 
   const logoutFunc = () => {
     logout();
@@ -28,6 +29,11 @@ const Navbar = () => {
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setDropdownOpen(false);
+  }, [location]);
 
 
   return (
@@ -82,7 +88,6 @@ const Navbar = () => {
                 </button>
 
                 <button className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-gray-800 transition">
-
                   <NavLink to="/signup">Signup</NavLink>
                 </button>
               </>
@@ -237,7 +242,7 @@ const Navbar = () => {
               </>
             )}
 
-            <div className="border-t pt-4">
+            <div className="border-t px-6 py-2 pb-6 space-y-4">
               {auth && (
                 <>
                   {/* User Showing homepage */}

@@ -94,14 +94,22 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="bg-gray-200">
-        <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row items-center">
-          <p className="text-gray-500 text-sm text-center sm:text-left">
-            © {new Date().getFullYear()} Photo Gallery — All Rights Reserved
+      {/* FOOTER */}
+      <div className="bg-gradient-to-r from-gray-800 to-blue-900 text-white py-4 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-center md:text-left">
+            © 2026 Photo Gallary — All Rights Reserved.
           </p>
+
+          <div className="flex gap-4 mt-2 md:mt-0">
+            <span className="bg-blue-600 px-2 rounded">f</span>
+            <span className="bg-sky-500 px-2 rounded">t</span>
+            <span className="bg-pink-500 px-2 rounded">i</span>
+            <span className="bg-blue-800 px-2 rounded">in</span>
+          </div>
         </div>
       </div>
+
     </footer>
   );
 };
