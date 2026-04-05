@@ -1,6 +1,8 @@
 const User = require("../models/userModel");
 const File = require("../models/fileModel");
 const s3 = require("../middleware/s3Upload");
+const { Parser } = require("json2csv");
+const ExcelJS = require("exceljs");
 const { DeleteObjectsCommand } = require("@aws-sdk/client-s3");
 
 const getAllUsers = async (req, res) => {
@@ -122,5 +124,82 @@ const getRecentUsers = async (req, res) => {
   }
 }
 
+const downloadUsersCSV = async (req, res) => {
+  try {
+    const { search = "" } = req.query;
 
-module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, getDeleteByUserId, getTotalUsers, getRecentUsers };
+    const users = await User.find({
+      $or: [
+        { username: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ],
+    })
+      .select("username email role createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const formatted = users.map((u) => ({
+      Name: u.username || "-",
+      Email: u.email,
+      Role: u.role,
+      "Created Date": new Date(u.createdAt).toLocaleString("en-IN"),
+    }));
+
+    const parser = new Parser();
+    const csv = parser.parse(formatted);
+
+    res.header("Content-Type", "text/csv");
+    res.attachment("users.csv");
+    return res.send(csv);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "CSV download failed" });
+  }
+};
+
+const downloadUsersExcel = async (req, res) => {
+    try {
+      const { search = "" } = req.query;
+
+      const users = User.find({
+        $or: [
+          { username: { $regex: search, $options: "i" }},
+          { email: { $regex: search, $options: "i"}}
+        ]
+      })
+      .select("username email role createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+      const workbook = new ExcelJS.Workbook();
+      const workSheet = workbook.addWorksheet("users");
+
+      workSheet.columns = [
+        { header: "Name", key: "username", width: 25 },
+        { header: "Emmail", key: "email", width: 25 },
+        { header: "Role", key: "role", widht: 25 },
+        { header: "Created Date", key: "createdAt", width: 25 }
+      ];
+
+      users.forEach((user) => {
+         workSheet.addRow(user)
+      });
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+
+      await workbook.xlsx.write(res);
+    } catch (err) {
+      await workbook.xlsx.write(res);
+    }
+}
+
+module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, getDeleteByUserId, getTotalUsers, getRecentUsers, downloadUsersCSV, downloadUsersExcel };

@@ -64,6 +64,10 @@ const AdminPhotos = () => {
     return (
         <div className="bg-white rounded-xl shadow p-4 sm:p-6">
 
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                <h2 className="text-2xl font-semibold">Admin Photos</h2>
+            </div>
+
             {/* Bulk Action Bar */}
             {selected.length > 0 && (
                 <div className="mb-4 flex justify-between items-center bg-yellow-50 p-3 rounded-lg">
