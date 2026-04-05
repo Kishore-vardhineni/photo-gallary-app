@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import { getAllUsers, getDeleteByUserId, getDownloadUsersCSV } from "../services/authService";
+import { getAllUsers, getDeleteByUserId, getDownloadUsersCSV, getDownloadUsersExcel } from "../services/authService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import DeletePopupUser from "./DeletePopupUser";
@@ -71,30 +71,51 @@ const AllUsers = () => {
     }
 
     const downloadUsersCsv = async () => {
-    try {
-        const response = await getDownloadUsersCSV(search);
+        try {
+            const response = await getDownloadUsersCSV(search);
 
-        // Create file URL
-        const blob = new Blob([response.data], { type: "text/csv" });
-        const url = window.URL.createObjectURL(blob);
+            const blob = new Blob([response.data], { type: "text/csv" });
+            const url = window.URL.createObjectURL(blob);
 
-        // Create temporary link
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "users.csv");
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "users.csv");
 
-        document.body.appendChild(link);
-        link.click();
+            document.body.appendChild(link);
+            link.click();
 
-        // Cleanup
-        link.remove();
-        window.URL.revokeObjectURL(url);
+            link.remove();
+            window.URL.revokeObjectURL(url);
 
-        toast.success("CSV downloaded successfully");
-    } catch (error) {
-        toast.error("Failed to download CSV");
+            toast.success("CSV downloaded successfully");
+        } catch (error) {
+            toast.error("Failed to download CSV");
+        }
+    };
+
+    const downloadUsersExcel = async () => {
+        try {
+            const response = await getDownloadUsersExcel(search);
+
+            const blob = new Blob([response.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            })
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `users_${search || "all"}_${Date.now()}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            toast.success("Excel downloaded successfully");
+        } catch (err) {
+            toast.error("Failed to download Excel");
+        }
     }
-};
 
     return (
 
@@ -114,7 +135,7 @@ const AllUsers = () => {
                     <div className="flex gap-2 w-full sm:w-auto">
 
                         <button
-                            
+                            onClick={downloadUsersExcel}
                             className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg whitespace-nowrap"
                         >
                             Download Excel

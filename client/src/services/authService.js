@@ -35,6 +35,13 @@ export const getDownloadUsersCSV = async (search = "") => {
     });
 }
 
+export const getDownloadUsersExcel = async (search = "") => {
+    return axiosInstance.get("/users/export/excel", {
+        params: { search },
+        responseType: "blob"
+    });
+}
+
 export const getRecentUsers = async () => {
     return axiosInstance.get("/users/recent-users")
 }
