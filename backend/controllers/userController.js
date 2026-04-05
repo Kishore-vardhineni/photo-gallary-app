@@ -1,6 +1,9 @@
 const User = require("../models/userModel");
 const File = require("../models/fileModel");
 const s3 = require("../middleware/s3Upload");
+const { Parser } = require("json2csv");
+const ExcelJS = require("exceljs");
+
 const { DeleteObjectsCommand } = require("@aws-sdk/client-s3");
 
 const getAllUsers = async (req, res) => {
@@ -31,28 +34,28 @@ const getFindByUserId = async (req, res) => {
   }
 };
 
-const getUpdatedByUserId = async (req, res) => { 
-    try {
-      const { id } = req.params;
-      const updatedUser = await User.findByIdAndUpdate(
-        id,
-        {
-          $set: req.body,
-        },
-        { new: true, runValidators: true, select: "password" }
-      );
+const getUpdatedByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: req.body,
+      },
+      { new: true, runValidators: true, select: "password" }
+    );
 
-      if (!updatedUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.status(200).json({
-        success: true,
-        message: "User updated successfully",
-        updatedUser,
-      });
-    } catch (error) {
-      return res.status(500).json({ message: "Internal server error" });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 const getDeleteByUserId = async (req, res) => {
@@ -98,7 +101,7 @@ const getDeleteByUserId = async (req, res) => {
 const getTotalUsers = async (req, res) => {
   try {
     const count = await User.countDocuments()
-      return res.status(200).json({ totalUsers: count });
+    return res.status(200).json({ totalUsers: count });
   } catch (err) {
     return res.status(500).json({ message: "Internal server error" });
   }
@@ -116,11 +119,94 @@ const getRecentUsers = async (req, res) => {
       users
     });
   } catch (err) {
-     res.status(500).json({
+    res.status(500).json({
       message: err.message
     });
   }
 }
 
+const downloadUsersCSV = async (req, res) => {
+  try {
+    const { search = "" } = req.query;
 
-module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, getDeleteByUserId, getTotalUsers, getRecentUsers };
+    const users = await User.find({
+      $or: [
+        { username: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ],
+    })
+      .select("username email role createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const formatted = users.map((u) => ({
+      Name: u.username || "-",
+      Email: u.email,
+      Role: u.role,
+      "Created Date": new Date(u.createdAt).toLocaleString("en-IN"),
+    }));
+
+    const parser = new Parser();
+    const csv = parser.parse(formatted);
+
+    res.header("Content-Type", "text/csv");
+    res.attachment("users.csv");
+    return res.send(csv);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "CSV download failed" });
+  }
+};
+
+const downloadUsersExcel = async (req, res) => {
+  try {
+    const { search = "" } = req.query;
+
+    const users = await User.find({
+      $or: [
+        { username: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { role: { $regex: search, $options: "i" } }
+      ]
+    })
+      .select("username email role createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Users");
+
+    // Header
+    worksheet.columns = [
+      { header: "ID", key: "_id", width: 25 },
+      { header: "Name", key: "username", width: 25 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Role", key: "role", width: 15 },
+      { header: "Created At", key: "createdAt", width: 25 },
+    ];
+
+    // Rows
+    users.forEach((user) => {
+      worksheet.addRow(user);
+    });
+
+    // Response
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=users.xlsx"
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+
+  } catch (err) {
+    res.status(500).json({ message: "Error generating Excel" });
+  }
+}
+
+module.exports = { getAllUsers, getFindByUserId, getUpdatedByUserId, getDeleteByUserId, getTotalUsers, getRecentUsers, downloadUsersCSV, downloadUsersExcel };

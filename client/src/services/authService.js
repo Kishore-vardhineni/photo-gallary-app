@@ -28,6 +28,20 @@ export const getTotalUsers = async () => {
     return axiosInstance.get("/users/total-users")
 }
 
+export const getDownloadUsersCSV = async (search = "") => {
+    return axiosInstance.get("/users/export/csv", {
+        params: { search },
+        responseType: "blob"
+    });
+}
+
+export const getDownloadUsersExcel = async (search = "") => {
+    return axiosInstance.get("/users/export/excel", {
+        params: { search },
+        responseType: "blob"
+    });
+}
+
 export const getRecentUsers = async () => {
     return axiosInstance.get("/users/recent-users")
 }
