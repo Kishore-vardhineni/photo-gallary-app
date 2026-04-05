@@ -17,7 +17,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 app.use(cors({
-  origin: "http://13.127.122.73.nip.io",
+  origin: "https://13.127.122.73.nip.io",
   credentials: true
 }));
 app.use(express.json());
