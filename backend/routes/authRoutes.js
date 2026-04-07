@@ -36,9 +36,11 @@ router.get("/google/callback", (req, res, next) => {
     // 🔐 Generate JWT
     const access_token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
+      process.env.JWT_ACCESS_SECRET,
+      { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
     );
+
+    console.log("acces_token", access_token);
 
     // 👉 Send token to frontend
     res.redirect(`http://localhost:3000/oauth-success?access_token=${access_token}&user=${encodeURIComponent(JSON.stringify(user))}`);
