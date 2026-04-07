@@ -103,17 +103,6 @@ const AddUserPhoto = () => {
                     <h1 className="text-xl sm:text-2xl font-semibold">Add / Edit Photo</h1>
                     <p className="text-gray-500 text-sm">Photos &gt; Add New Photo</p>
                 </div>
-
-                <div className="flex items-center gap-3">
-                    <button className="px-4 py-2 border rounded-lg text-gray-600 bg-white">
-                        Cancel
-                    </button>
-                    <button disabled={uploading}
-                        onClick={handleSubmit} className="flex items-center gap-2 px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-black rounded-lg">
-                        <Upload size={16} /> 
-                        {uploading ? "Uploading..." : "Upload Photo"}
-                    </button>
-                </div>
             </div>
 
             {/* Main Container */}
@@ -210,6 +199,21 @@ const AddUserPhoto = () => {
                                 />
                             </div>
                         </div>
+                        
+                        <div className="hidden lg:flex justify-end gap-3 mt-6">
+                            <button className="px-4 py-2 border rounded-md text-gray-700">
+                                Cancel
+                            </button>
+
+                            <button
+                                disabled={uploading}
+                                onClick={handleSubmit}
+                                className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-black rounded-md flex items-center gap-2"
+                            >
+                                <Upload size={16} />
+                                {uploading ? "Uploading..." : "Upload Photo"}
+                            </button>
+                        </div>
                     </div>
 
                     {/* RIGHT SIDE */}
@@ -273,6 +277,23 @@ const AddUserPhoto = () => {
                         <p className="text-xs text-gray-400 mt-2">
                             Supports: JPG, PNG, WEBP (Max file size: 5MB)
                         </p>
+
+                        <div className="flex flex-col gap-3 mt-6 lg:hidden">
+
+                            <button className="w-full px-4 py-2 border rounded-md text-gray-700">
+                                Cancel
+                            </button>
+
+                            <button
+                                disabled={uploading}
+                                onClick={handleSubmit}
+                                className="w-full px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-black rounded-md flex items-center justify-center gap-2"
+                            >
+                                <Upload size={16} />
+                                {uploading ? "Uploading..." : "Upload Photo"}
+                            </button>
+
+                        </div>
                     </div>
                 </div>
             </div>
