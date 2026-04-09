@@ -56,11 +56,9 @@ const getMyFiles = async (req, res) => {
   try {
 
     if (req.user.role === 'admin') {
-      // ✅ Admin → get ALL files
       files = await File.find().sort({ createdAt: -1 });
 
     } else {
-      // ✅ Normal user → only their files
       files = await File.find({ userId: req.user.id })
         .sort({ createdAt: -1 });
     }

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import toast from "react-hot-toast";
 import { getPhotoFindById } from "../services/authService";
 import { NavLink } from "react-router-dom";
+import ImagePreview from "./ImagePreview";
 
 
 const UserPhotos = () => {
 
   const [userPhoto, setUserPhoto] = useState([0]);
+  const [previewImage, setPreviewImage] = useState(null);
   console.log("data", userPhoto);
 
   useEffect(() => {
@@ -136,6 +138,7 @@ const UserPhotos = () => {
                   src={photo.url}
                   className="w-full h-40 object-cover"
                   alt={photo.title || "photo"}
+                  onClick={() => setPreviewImage(photo.url)}
                 />
 
                 {/* CONTENT */}
@@ -187,6 +190,15 @@ const UserPhotos = () => {
         <button className="px-3 py-1 bg-yellow-500 text-black rounded">
           Next
         </button>
+      </div>
+
+      <div>
+        {previewImage && (
+          <ImagePreview
+            image={previewImage}
+            onClose={() => setPreviewImage(null)}
+          />
+        )}
       </div>
 
     </div>

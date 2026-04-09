@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
         localStorage.setItem("auth", JSON.stringify(data.user));
         localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        // localStorage.setItem("refresh_token", data.refresh_token);
     };
 
     const logout = () => {
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
         setAccessToken(null);
         localStorage.removeItem("auth");
         localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
+        // localStorage.removeItem("refresh_token");
     };
 
     return (
