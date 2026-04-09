@@ -8,6 +8,12 @@ export const signIn = async (data) => {
     return axiosInstance.post("/auth/signin", data);
 }
 
+export const getRefreshToken = async () => {
+    return axiosInstance.post( `/auth/refresh-token`, {}, {
+         withCredentials: true
+    });
+}
+
 export const getAllUsers = async () => {
     return axiosInstance.get("/users/getallusers");
 }
@@ -86,3 +92,4 @@ export const getUplaodFile = async (data, onUploadProgress) => {
         }
     });
 }
+
