@@ -8,7 +8,7 @@ const { DeleteObjectsCommand } = require("@aws-sdk/client-s3");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, { password: 0 });
+    const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 });
 
     res.status(200).json({
       sucess: true,

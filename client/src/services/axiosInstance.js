@@ -1,7 +1,22 @@
 import axios from "axios";
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        };
+    });
+    failedQueue = [];
+}
+
 const axiosInstance = axios.create({
     baseURL: "http://localhost:3001/api",
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json"
     }
@@ -9,46 +24,71 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-       const token = localStorage.getItem("access_token");
+        const token = localStorage.getItem("access_token");
 
-       if(token) {
-         config.headers.Authorization = `Bearer ${token}`;
-       }
-      return config
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config
     }, (error) => {
-         return Promise.reject(error);
+        return Promise.reject(error);
     }
 )
 
 axiosInstance.interceptors.response.use(
-    (response) => {
-        return response;
-    }, (error) => {
-        if(error.response) {
+    (response) => response,
+    async (error) => {
 
-            switch(error.response.status) {
+        const originalRequest = error.config;
 
-                case 401:
-                    console.log("Unauthorized - Token expired");
-                    // localStorage.removeItem("access_token");
-                    // window.location.href = "/signin";
-                    break;
+        if (error.response && error.response.status === 401) {
 
-                case 403:
-                    console.log("Forbidden access");
-                    break;
+            if (originalRequest._retry) {
+                return Promise.reject(error);
+            }
 
-                case 404: 
-                    console.log("Page not found");
-                    break;
-                    
-                case 500:
-                    console.log("Server error");
-                    break;
-                    
-                default:
-                    console.log(error.response.data.message);
-            } 
+            originalRequest._retry = true;
+
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject })
+                }).then((token) => {
+                    originalRequest.headers["Authorization"] = `Bearer ${token}`;
+                    return axiosInstance(originalRequest);
+                }).catch(err => Promise.reject(err));
+            }
+
+            isRefreshing = true;
+
+            try {
+                const res = await axios.post(
+                    "http://localhost:3001/api/auth/refresh-token",
+                    {},
+                    { withCredentials: true }
+                )
+                const newAccessToken = res.data.access_token;
+                localStorage.setItem("access_token", newAccessToken);
+
+                axiosInstance.defaults.headers.common["Authorization"] =
+                    `Bearer ${newAccessToken}`;
+
+                processQueue(null, newAccessToken);
+
+                originalRequest.headers["Authorization"] =
+                    `Bearer ${newAccessToken}`;
+
+                return axiosInstance(originalRequest);
+
+            } catch (err) {
+                processQueue(err, null);
+
+                localStorage.removeItem("access_token");
+                window.location.href = "/signin";
+
+                return Promise.reject(err)
+            } finally {
+                isRefreshing = false;
+            }
         }
 
         return Promise.reject(error);

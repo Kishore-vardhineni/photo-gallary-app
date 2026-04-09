@@ -10,8 +10,8 @@ const signUp = async (req, res) => {
 
   try {
 
-    const existingUser = await User.findOne({ $or: [{ email }, { username }]});
-    
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+
     if (existingUser) {
       return res.status(400).json({ message: "Email or Username already exists" });
     }
@@ -57,52 +57,52 @@ const signUp = async (req, res) => {
 };
 
 const signIn = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    try {
-        const user = await User.findOne({ email });
+  try {
+    const user = await User.findOne({ email });
 
-        if(!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        const isPasswordValid = await bcrypt.compare(password.toString(), user.password);
-
-        if(!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentails"});
-        }
-
-        const accessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN });
-
-        const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN })
-
-        user.refreshToken = refreshToken;
-        await user.save();
-
-        res.cookie("refreshToken", refreshToken, {
-           httpOnly: true,
-           secure: true,
-           sameSite: "strict",
-        })
-
-        res.status(200).json({
-            message: "Login successful",
-            user: { id: user._id, username: user.username, email: user.email, role: user.role },
-            access_token: accessToken
-        });        
-    } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    const isPasswordValid = await bcrypt.compare(password.toString(), user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentails" });
+    }
+
+    const accessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN });
+
+    const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN })
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false
+    })
+
+    res.status(200).json({
+      message: "Login successful",
+      user: { id: user._id, username: user.username, email: user.email, role: user.role },
+      access_token: accessToken
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 const verifyTokens = async (req, res) => {
   try {
     if (req.user) {
-        return res.status(200).json({
-           success: true,
-           message: "Token is valid",
-           user: req.user
-        })
+      return res.status(200).json({
+        success: true,
+        message: "Token is valid",
+        user: req.user
+      })
     }
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
@@ -113,27 +113,27 @@ const logOut = async (req, res) => {
   try {
     const token = req.cookies.refreshToken;
 
-    if(!token) {
-      return res.status(400).json({ message: "No token provided"});
+    if (!token) {
+      return res.status(400).json({ message: "No token provided" });
     }
 
     const user = await User.find({ refreshToken: token });
 
-    if(user) {
-       user.refreshToken = null;
-       await user.save();
+    if (user) {
+      user.refreshToken = null;
+      await user.save();
     }
 
     res.clearCookie("refreshToken", {
-       httpOnly: true,
-       sameSite: false,
-       secure: true
+      httpOnly: true,
+      sameSite: "lax",  
+      secure: false 
     })
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
-}; 
+};
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -205,69 +205,69 @@ const forgotPassword = async (req, res) => {
 }
 
 const resetPassword = async (req, res) => {
-    const { token } = req.params;
-    const { password } = req.body;
+  const { token } = req.params;
+  const { password } = req.body;
 
-    try {
+  try {
 
-      const hashedToken = crypto
-        .createHash("sha256")
-        .update(token)
-        .digest("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
 
-       const user = await User.findOne({
-           resetPasswordToken: hashedToken,
-           resetPasswordExpire: { $gt: Date.now() }
-       })
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    })
 
-       if(!user) {
-           return res.status(400).json({ message: "Invalid or expired token" });
-       }
-
-       const hashedPassword = await bcrypt.hash(password.toString(), 10);
-
-       user.password = hashedPassword;
-       user.resetToken = undefined;
-       user.resetTokenExpiry = undefined;
-
-       await user.save();
-
-       res.status(200).json({ message: "Password has been reset successfully" });
-       
-    } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
     }
+
+    const hashedPassword = await bcrypt.hash(password.toString(), 10);
+
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password has been reset successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 const changePassword = async (req, res) => {
-    const { currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
-    try {
+  try {
 
-      console.log("Decoded user:", req.user.role);
+    console.log("Decoded user:", req.user.role);
 
-      const userId = req.user.id;
-       const user = await User.findById(userId);
+    const userId = req.user.id;
+    const user = await User.findById(userId);
 
-       console.log("user details", user);
+    console.log("user details", user);
 
-       if(!user) {
-           return res.status(404).json({ message: "User not found" });
-       }
-
-       const isMatch = await bcrypt.compare(currentPassword.toString(), user.password);
-
-       if(!isMatch) {
-          return res.status(401).json({ message: "Current password is incorrect" });
-       }
-
-       const hashedPassword = await bcrypt.hash(newPassword.toString(), 10);
-       user.password = hashedPassword;
-       await user.save();
-       res.status(200).json({ message: "Password changed successfully" });
-    } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    const isMatch = await bcrypt.compare(currentPassword.toString(), user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword.toString(), 10);
+    user.password = hashedPassword;
+    await user.save();
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 const refreshToken = async (req, res) => {
@@ -282,7 +282,11 @@ const refreshToken = async (req, res) => {
 
     const user = await User.findById(decode.id);
 
-    if (!user || user.refreshToken !== token) {
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    if (user.refreshToken !== token) {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
 
@@ -295,11 +299,12 @@ const refreshToken = async (req, res) => {
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      sameSite: false,
-      secure: true
+      sameSite: "lax",
+      secure: false,
+      maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(200).json({ message: "Token refreshed", access_token: accessToken });
+    return res.status(200).json({ message: "Token refreshed", access_token: newAccessToken });
 
   } catch (error) {
     if (error.name === "TokenExpiredError") {
@@ -315,7 +320,7 @@ const refreshToken = async (req, res) => {
 }
 
 const verifyEmail = async (req, res) => {
-  
+
   try {
     const user = await User.findOne({ email: req.user.email });
     if (!user) {

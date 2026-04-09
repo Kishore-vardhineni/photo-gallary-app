@@ -10,6 +10,7 @@ const dns = require('dns');
 const passport = require('passport');
 require("./config/passport");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 // Force IPv4 if needed (optional) and use Google DNS
 dns.setServers(['8.8.8.8', '8.8.4.4']); 
@@ -20,6 +21,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 dotenv.config();
 
 app.use(

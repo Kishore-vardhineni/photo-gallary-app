@@ -182,8 +182,6 @@ const AllUsers = () => {
 
             </div>
 
-
-
             {/* ✅ Desktop TABLE VIEW */}
             <div className="hidden lg:block bg-white rounded-xl shadow">
                 <table className="w-full text-left">
