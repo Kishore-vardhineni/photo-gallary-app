@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getRefreshToken } from "./authService";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -61,11 +62,8 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const res = await axios.post(
-                    "http://localhost:3001/api/auth/refresh-token",
-                    {},
-                    { withCredentials: true }
-                )
+                const res = await getRefreshToken();
+                
                 const newAccessToken = res.data.access_token;
                 localStorage.setItem("access_token", newAccessToken);
 
