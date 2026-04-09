@@ -29,7 +29,7 @@ router.get("/google/callback", (req, res, next) => {
 
     if (!user) {
       return res.redirect(
-        `http://localhost:3000/oauth-success?error=${encodeURIComponent("User not registered. Please signup.")}`
+        `${process.env.CLIENT_URL}/oauth-success?error=${encodeURIComponent("User not registered. Please signup.")}`
       );
     }
 
@@ -43,7 +43,7 @@ router.get("/google/callback", (req, res, next) => {
     console.log("acces_token", access_token);
 
     // 👉 Send token to frontend
-    res.redirect(`http://localhost:3000/oauth-success?access_token=${access_token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+    res.redirect(`${process.env.CLIENT_URL}/oauth-success?access_token=${access_token}&user=${encodeURIComponent(JSON.stringify(user))}`);
   })(req, res, next);
 });
 

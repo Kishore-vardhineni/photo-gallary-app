@@ -17,7 +17,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://13.127.122.73.nip.io",
   credentials: true
 }));
 app.use(express.json());
@@ -29,10 +29,6 @@ app.use(
     secret: "secret",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: false, // true only in HTTPS
-      httpOnly: true,
-    },
   })
 );
 
