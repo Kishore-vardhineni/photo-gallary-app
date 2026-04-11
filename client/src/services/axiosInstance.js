@@ -16,7 +16,7 @@ const processQueue = (error, token = null) => {
 }
 
 const axiosInstance = axios.create({
-    baseURL: "https://13.127.122.73.nip.io/api",
+    baseURL: "https://3.108.21.211.nip.io/api",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"
