@@ -4,6 +4,10 @@ export const signUp = async (data) => {
     return axiosInstance.post("/auth/signup", data);
 }
 
+export const sendOTP = async (data) => {
+    return axiosInstance.post("/auth/send-otp", data);
+}
+
 export const signIn = async (data) => {
     return axiosInstance.post("/auth/signin", data);
 }

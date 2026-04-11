@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const otpGenerator = require("otp-generator");
+const OTP = require("../models/otpModel");
 
 const signUp = async (req, res) => {
   const { username, email, password, role } = req.body;
@@ -340,4 +342,52 @@ const verifyEmail = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-module.exports = { signUp, signIn, verifyTokens, logOut, forgotPassword, resetPassword, changePassword, refreshToken, verifyEmail };
+
+const senOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false
+    })
+
+    const expiresAt = new Date(Date.now() + 1 * 60 * 1000);
+
+    await OTP.deleteMany({ email });
+    await OTP.create({
+      email,
+      otp,
+      expiresAt
+    })
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.SMTP_EMAIL,
+      to: email,
+      subject: "Your OTP Code",
+      html: `<h3>OTP Verification</h3>
+        <p>Your OTP is:</p>
+        <h2>${otp}</h2>
+        <p>This OTP is valid for 5 minutes.</p>`,
+    })
+
+     return res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+     return res.status(500).json({ message: "Failed to send OTP" });
+  }
+}
+
+module.exports = { signUp, signIn, verifyTokens, logOut, forgotPassword, resetPassword, changePassword, refreshToken, verifyEmail, senOTP };
