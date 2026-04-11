@@ -68,7 +68,7 @@ const Signin = () => {
   }
 
   const handleGoogleLogin = () => {
-   window.location.href = "http://13.127.122.73.nip.io/api/auth/google";
+   window.location.href = "http://3.108.21.211.nip.io/api/auth/google";
   };
   
   return (
