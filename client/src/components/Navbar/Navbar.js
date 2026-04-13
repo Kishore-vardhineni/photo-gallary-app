@@ -38,7 +38,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="w-full bg-white shadow-sm">
+      <nav className="w-full bg-white shadow-sm fixed top-0 left-0 z-[9999]">
         <div className="max-w-9xl mx-auto px-6 py-4 flex items-center justify-between">
 
 
@@ -132,7 +132,7 @@ const Navbar = () => {
                 <div className="relative" ref={dropdownRef}>
                   <div
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center space-x-3 cursor-pointer"
+                     className="flex items-center space-x-3 cursor-pointer"
                   >
                     <img
                       src="https://i.pravatar.cc/150?img=3"
@@ -141,7 +141,6 @@ const Navbar = () => {
                     />
                   </div>
 
-                  {/* Dropdown */}
                   {dropdownOpen && (
                     <div className="absolute right-0 mt-4 w-64 bg-white rounded-xl shadow-xl p-4">
 

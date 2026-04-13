@@ -1,5 +1,5 @@
 const express = require('express');
-const { signUp, signIn, verifyTokens, logOut, forgotPassword, resetPassword, changePassword, refreshToken, verifyEmail } = require('../controllers/authController');
+const { signUp, signIn, verifyTokens, logOut, forgotPassword, resetPassword, changePassword, refreshToken, verifyEmail, senOTP, verifyOtp } = require('../controllers/authController');
 const verifyToken = require('../middleware/verifyToken');
 const passport = require('passport');
 const jwt = require("jsonwebtoken");
@@ -15,6 +15,8 @@ router.post('/change-password', verifyToken, changePassword);
 router.post('/refresh-token', refreshToken);
 router.post('/verify-email', verifyToken, verifyEmail);
 router.get('/verify-token', verifyToken, verifyTokens);
+router.post('/send-otp', senOTP);
+router.post('/verify-otp', verifyOtp)
 router.get(
     '/google',
     passport.authenticate("google", {
