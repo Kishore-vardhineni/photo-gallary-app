@@ -6,7 +6,7 @@ export const signupSchema = yup.object({
         .required("Please select the role"),
     username: yup
         .string()
-        .required("user Name is required")
+        .required("User Name is required")
         .min(3, "Minimum 3 characters"),
     email: yup
         .string()

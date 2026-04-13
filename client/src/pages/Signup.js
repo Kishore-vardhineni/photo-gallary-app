@@ -1,18 +1,23 @@
 import login_image from "../assets/images/login_page_image.jpg";
-import { Navigate, NavLink, } from "react-router-dom";
+import { NavLink, useNavigate, } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { sendOTP, signUp } from "../services/authService";
+import { sendOTP, signUp, verifyOTP } from "../services/authService";
 import toast from "react-hot-toast";
 import { signupSchema } from "../validation/signupSchema";
 import { Eye, EyeOff, Lock } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export const Signup = () => {
 
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const inputsRef = useRef([]);
+  const navigate = useNavigate();
+
 
   const { register,
     handleSubmit,
@@ -27,6 +32,9 @@ export const Signup = () => {
   });
 
   const password = watch("password") || "";
+  const emailValue = watch("email") || "";
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const checks = {
     uppercase: /[A-Z]/.test(password),
@@ -50,12 +58,17 @@ export const Signup = () => {
     try {
       const email = watch("email");
 
-      if(!email) {
-        return toast.error("Enter email first");
+      if (!email) {
+        toast.error("Enter email first");
+      }
+
+      if (!isValidEmail(email)) {
+        toast.error("Enter a valid email");
       }
 
       const response = await sendOTP({ email });
       toast.success(response.data.message);
+      setOtpSent(true);
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response?.data?.message);
@@ -63,12 +76,64 @@ export const Signup = () => {
     }
   }
 
+  const handleChange = (element, index) => {
+    const value = element.value.replace(/[^0-9]/g, "");
+
+    if (!value) return;
+
+    let newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (index < 5) {
+      inputsRef.current[index + 1].focus();
+    }
+  }
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      let newOtp = [...otp];
+      newOtp[index] = "";
+      setOtp(newOtp);
+
+      if (index > 0) {
+        inputsRef.current[index - 1].focus();
+      }
+    }
+  }
+
+  const handleVerifyOtp = async () => {
+     try {
+       const enteredOtp = otp.join("");
+
+       if(enteredOtp.length !== 6) {
+         return toast.error("Enter complete OTP");
+       }
+
+       const email = watch("email");
+
+       const response = await verifyOTP({
+          email,
+          otp: enteredOtp
+       });
+       toast.success(response.data.message);
+       setOtpVerified(true);
+       setOtpSent(false);
+
+     } catch (error) {
+
+     }
+  }
+
   const onSubmit = async (data) => {
     try {
-      const response = await signUp(data);
+      const response = await signUp({
+        ...data,
+        otp: otp.join("")
+      });
       toast.success(response.data.message);
       reset();
-      Navigate("/signin")
+      navigate("/signin")
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response?.data?.message);
@@ -150,25 +215,57 @@ export const Signup = () => {
                   className="flex-1 px-4 py-3 rounded-xl border border-gray-300 
                  focus:outline-none focus:ring-2 focus:ring-yellow-400 
                  text-gray-700 placeholder-gray-400"
-                  {...register("username")}
+                  {...register("email")}
                 />
 
                 {/* Button */}
                 <button
                   type="button"
                   onClick={handleSendOtp}
-                  className="px-2 py-3 rounded-xl 
-                 bg-gradient-to-r from-yellow-400 to-yellow-500 
-                 text-white font-semibold 
-                 hover:from-yellow-500 hover:to-yellow-600 
-                 transition-all duration-200 shadow"
+                  disabled={!isValidEmail(emailValue) || otpSent}
+                  className={`px-2 py-3 rounded-xl text-white font-semibold 
+                  transition-all duration-200 shadow whitespace-nowrap
+                  ${isValidEmail(emailValue) && !otpSent
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 cursor-pointer"
+                      : "bg-yellow-200 cursor-not-allowed opacity-50"
+                    }`}
                 >
-                  Send OTP
+                  {otpSent ? "OTP Sent ✓" : "Send OTP"}
                 </button>
-                
+
               </div>
               <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
             </div>
+
+            {otpSent && (
+              <div className="mt-4">
+
+                <div className="flex items-center gap-1.5">
+                  {otp.map((data, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      maxLength="1"
+                      value={data}
+                      ref={(el) => (inputsRef.current[index] = el)}
+                      onChange={(e) => handleChange(e.target, index)}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
+                      className="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 outline-none"
+                    />
+                  ))}
+
+                  <button type="button" onClick={handleVerifyOtp} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                    Verify
+                  </button>
+                </div>
+
+                <p className="text-gray-500 mt-2">
+                  Valid for <span className="text-yellow-500 font-semibold">2:57</span>
+                </p>
+              </div>
+            )}
+
+
 
             {otpVerified && (
               <>

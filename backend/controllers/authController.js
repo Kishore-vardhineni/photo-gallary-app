@@ -128,8 +128,8 @@ const logOut = async (req, res) => {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      sameSite: "lax",  
-      secure: false 
+      sameSite: "lax",
+      secure: false
     })
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
@@ -357,7 +357,7 @@ const senOTP = async (req, res) => {
       specialChars: false
     })
 
-    const expiresAt = new Date(Date.now() + 1 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 3 * 60 * 1000);
 
     await OTP.deleteMany({ email });
     await OTP.create({
@@ -374,20 +374,108 @@ const senOTP = async (req, res) => {
       },
     });
 
+    const html = `<body style="margin:0; padding:0; background-color:#f4f4f4; font-family: Arial, sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding: 40px 0;">
+    <tr>
+      <td align="center">
+        <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:12px; overflow:hidden; border: 1px solid #e0e0e0;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:#f5c842; padding: 20px; text-align:center;">
+              <span style="font-size:22px; font-weight:bold; color:#412402; letter-spacing:1px;">
+                Photo Gallery
+              </span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 40px 40px 30px; text-align:center;">
+              <h2 style="margin:0 0 8px; font-size:22px; color:#1a1a1a;">
+                Welcome to Photo Gallery!
+              </h2>
+              <p style="margin:0 0 30px; font-size:15px; color:#666666;">
+                Use the OTP below to complete your signup.
+              </p>
+
+              <!-- OTP Box -->
+              <div style="display:inline-block; background:#1a3de8; border-radius:10px; padding:16px 48px; margin-bottom:30px;">
+                <span style="font-size:32px; font-weight:bold; color:#ffffff; letter-spacing:10px;">
+                  ${ otp }
+                </span>
+              </div>
+
+              <!-- Note -->
+              <p style="font-size:13px; color:#888888; line-height:1.7; margin:0 0 20px;">
+                This OTP expires in <strong style="color:#333;">5 minutes</strong>.
+                Do not share it with anyone. If you didn't request this,
+                please ignore this email or contact our support.
+              </p>
+
+              <p style="font-size:14px; color:#888; margin:0;">Thanks,</p>
+              <p style="font-size:14px; font-weight:bold; color:#333; margin:4px 0 0;">
+                The Photo Gallery Team
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top:1px solid #eeeeee; padding:16px 40px; text-align:center;">
+              <p style="font-size:12px; color:#aaaaaa; margin:0;">
+                © 2026 Photo Gallery. All rights reserved.
+              </p>
+              <p style="font-size:12px; color:#aaaaaa; margin:4px 0 0;">
+                no-reply@photogallery.com
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
+`
+
     await transporter.sendMail({
       from: process.env.SMTP_EMAIL,
       to: email,
       subject: "Your OTP Code",
-      html: `<h3>OTP Verification</h3>
-        <p>Your OTP is:</p>
-        <h2>${otp}</h2>
-        <p>This OTP is valid for 5 minutes.</p>`,
+      html
     })
 
-     return res.status(200).json({ message: "OTP sent successfully" });
+    return res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
-     return res.status(500).json({ message: "Failed to send OTP" });
+    return res.status(500).json({ message: "Failed to send OTP" });
   }
 }
 
-module.exports = { signUp, signIn, verifyTokens, logOut, forgotPassword, resetPassword, changePassword, refreshToken, verifyEmail, senOTP };
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const record = await OTP.findOne({ email, otp });
+
+    if (!record) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (record.expiresAt < new Date()) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    await OTP.deleteMany({ email });
+
+    return res.status(200).json({ message: "OTP verified successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Verification failed" })
+  }
+}
+
+module.exports = { signUp, signIn, verifyTokens, logOut, forgotPassword, resetPassword, changePassword, refreshToken, verifyEmail, senOTP, verifyOtp };
