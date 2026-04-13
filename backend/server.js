@@ -17,7 +17,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 app.use(cors({
-  origin: "https://3.108.21.211.nip.io",
+  origin: "http://localhost:3000",
   credentials: true
 }));
 app.use(express.json());
