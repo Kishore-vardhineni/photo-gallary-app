@@ -409,7 +409,7 @@ const senOTP = async (req, res) => {
 
               <!-- Note -->
               <p style="font-size:13px; color:#888888; line-height:1.7; margin:0 0 20px;">
-                This OTP expires in <strong style="color:#333;">5 minutes</strong>.
+                This OTP expires in <strong style="color:#333;">3 minutes</strong>.
                 Do not share it with anyone. If you didn't request this,
                 please ignore this email or contact our support.
               </p>

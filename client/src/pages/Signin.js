@@ -131,7 +131,7 @@ const Signin = () => {
               <Rule valid={checks.lowercase} text="1 Lowercase letter" />
               <Rule valid={checks.number} text="1 Number" />
               <Rule valid={checks.special} text="1 Special character" />
-              <Rule valid={checks.length} text="Minimum 8 characters" />
+              <Rule valid={checks.length} text="Minimum 8 char" />
             </div>
 
             {/* Remember + Forgot */}
