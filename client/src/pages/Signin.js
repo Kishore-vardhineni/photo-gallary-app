@@ -68,7 +68,7 @@ const Signin = () => {
   }
 
   const handleGoogleLogin = () => {
-   window.location.href = "http://3.108.21.211.nip.io/api/auth/google";
+   window.location.href = "http://localhost:3001/api/auth/google";
   };
   
   return (
@@ -131,7 +131,7 @@ const Signin = () => {
               <Rule valid={checks.lowercase} text="1 Lowercase letter" />
               <Rule valid={checks.number} text="1 Number" />
               <Rule valid={checks.special} text="1 Special character" />
-              <Rule valid={checks.length} text="Minimum 8 characters" />
+              <Rule valid={checks.length} text="Minimum 8 char" />
             </div>
 
             {/* Remember + Forgot */}

@@ -2,6 +2,7 @@ import { Upload, MapPin, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { getUplaodFile } from "../services/authService";
+import { NavLink } from "react-router-dom";
 
 const AddUserPhoto = () => {
 
@@ -19,9 +20,9 @@ const AddUserPhoto = () => {
     const inputRef = useRef();
 
     useEffect(() => {
-       return () => {
-         if(preview) URL.revokeObjectURL(preview)
-       }
+        return () => {
+            if (preview) URL.revokeObjectURL(preview)
+        }
     }, [preview]);
 
     const handleFile = (selectedFile) => {
@@ -44,7 +45,7 @@ const AddUserPhoto = () => {
     };
 
     const handleSubmit = async () => {
-        if (uploading) return; 
+        if (uploading) return;
         if (!file) return toast.error("Please upload an image");
 
         if (!form.title || !form.description || !form.category) {
@@ -95,13 +96,24 @@ const AddUserPhoto = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8  mt-10 pt-5">
 
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-semibold">Add / Edit Photo</h1>
-                    <p className="text-gray-500 text-sm">Photos &gt; Add New Photo</p>
+            <div className=" sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 mt-10">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
+                    Add / Edit Photo
+                </h1>
+
+                <div class="px-8 py-4 text-sm text-gray-600">
+
+                    <NavLink
+                        to="/user-photos"
+                        className="text-blue-500 cursor-pointer hover:underline"
+                    >
+                        Photos
+                    </NavLink>
+                    <span class="mx-2">/</span>
+                    <span>Add Photo</span>
+
                 </div>
             </div>
 
@@ -199,7 +211,7 @@ const AddUserPhoto = () => {
                                 />
                             </div>
                         </div>
-                        
+
                         <div className="hidden lg:flex justify-end gap-3 mt-6">
                             <button className="px-4 py-2 border rounded-md text-gray-700">
                                 Cancel
