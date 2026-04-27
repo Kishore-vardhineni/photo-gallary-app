@@ -8,6 +8,18 @@ import { signupSchema } from "../validation/signupSchema";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useRef, useState } from "react";
 
+const images = [
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+  "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+];
+
 export const Signup = () => {
 
   const [showNew, setShowNew] = useState(false);
@@ -103,26 +115,26 @@ export const Signup = () => {
   }
 
   const handleVerifyOtp = async () => {
-     try {
-       const enteredOtp = otp.join("");
+    try {
+      const enteredOtp = otp.join("");
 
-       if(enteredOtp.length !== 6) {
-         return toast.error("Enter complete OTP");
-       }
+      if (enteredOtp.length !== 6) {
+        return toast.error("Enter complete OTP");
+      }
 
-       const email = watch("email");
+      const email = watch("email");
 
-       const response = await verifyOTP({
-          email,
-          otp: enteredOtp
-       });
-       toast.success(response.data.message);
-       setOtpVerified(true);
-       setOtpSent(false);
+      const response = await verifyOTP({
+        email,
+        otp: enteredOtp
+      });
+      toast.success(response.data.message);
+      setOtpVerified(true);
+      setOtpSent(false);
 
-     } catch (error) {
+    } catch (error) {
 
-     }
+    }
   }
 
   const onSubmit = async (data) => {
@@ -142,23 +154,58 @@ export const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
 
-      {/* FORM SECTION */}
-      <div className="flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
+      {/* LEFT SIDE */}
+      <div className="lg:w-1/2 bg-black text-white p-6 md:p-10 flex flex-col justify-between">
 
-        <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-[480px]">
+        {/* Top Section */}
+        <div>
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl md:text-2xl font-bold">📷 Photo Gallery</h1>
 
-          <h1 className="text-2xl font-bold text-gray-800">
-            Photo Gallery
-          </h1>
+          </div>
 
-          <p className="text-gray-500 mb-6 text-sm">
-            The Faster You Fill Up The Faster You Enjoy!
-          </p>
+          <div className="mt-8 md:mt-12">
+            <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+              Capture. Share. <br />
+              <span className="text-blue-500">Inspire.</span>
+            </h2>
+            <p className="mt-4 text-gray-400 max-w-md">
+              A place to store your memories and share your perspective.
+            </p>
+          </div>
+        </div>
 
+        {/* Image Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mt-6">
+          {images.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt="gallery"
+              className="rounded-xl object-cover h-28 sm:h-32 md:h-40 w-full hover:scale-105 transition"
+            />
+          ))}
+        </div>
+      </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+      {/* RIGHT SIDE */}
+      <div className="lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-10">
+
+        <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 md:p-8">
+
+          {/* Header */}
+          <div className="text-center mb-6">
+            <div className="text-blue-500 text-4xl mb-2">🖼️</div>
+            <h2 className="text-xl md:text-2xl font-bold">Welcome Back</h2>
+            <p className="text-gray-500 text-sm">
+              Login to access your photo gallery
+            </p>
+          </div>
+
+          {/* Form */}
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
 
             {/* Role */}
             <div className="flex gap-4 mb-4">
@@ -265,8 +312,6 @@ export const Signup = () => {
               </div>
             )}
 
-
-
             {otpVerified && (
               <>
                 {/* Password */}
@@ -325,7 +370,6 @@ export const Signup = () => {
               </>
             )}
 
-
             <button
               type="submit"
               disabled={isSubmitting}
@@ -333,8 +377,6 @@ export const Signup = () => {
             >
               {isSubmitting ? "Signing Up..." : "Sign Up"}
             </button>
-
-
 
           </form>
 
@@ -346,21 +388,7 @@ export const Signup = () => {
           </p>
 
         </div>
-
       </div>
-
-
-      {/* IMAGE GALLERY */}
-      <div className="bg-gray-50">
-
-        <div >
-
-          <img src={login_image} alt="" className="h-full w-full object-cover" />
-
-        </div>
-
-      </div>
-
     </div>
   )
 }

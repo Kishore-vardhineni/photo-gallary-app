@@ -10,6 +10,19 @@ import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
 
 
+const images = [
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+  "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+];
+
+
 const Signin = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -68,29 +81,63 @@ const Signin = () => {
   }
 
   const handleGoogleLogin = () => {
-   window.location.href = "http://localhost:3001/api/auth/google";
+    window.location.href = "http://localhost:3001/api/auth/google";
   };
-  
+
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
 
-      {/* FORM SECTION */}
-      <div className="flex items-center justify-center bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 p-10">
+      {/* LEFT SIDE */}
+      <div className="lg:w-1/2 bg-black text-white p-6 md:p-10 flex flex-col justify-between">
 
-        <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-[420px]">
+        {/* Top Section */}
+        <div>
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl md:text-2xl font-bold">📷 Photo Gallery</h1>
 
-          <h1 className="text-2xl font-bold text-gray-800">
-            Photo Gallery
-          </h1>
+          </div>
 
-          <p className="text-gray-500 mb-6 text-sm">
-            The Faster You Fill Up The Faster You Enjoy!
-          </p>
+          <div className="mt-8 md:mt-12">
+            <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+              Capture. Share. <br />
+              <span className="text-blue-500">Inspire.</span>
+            </h2>
+            <p className="mt-4 text-gray-400 max-w-md">
+              A place to store your memories and share your perspective.
+            </p>
+          </div>
+        </div>
 
+        {/* Image Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mt-6">
+          {images.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt="gallery"
+              className="rounded-xl object-cover h-28 sm:h-32 md:h-40 w-full hover:scale-105 transition"
+            />
+          ))}
+        </div>
+      </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+      {/* RIGHT SIDE */}
+      <div className="lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-10">
 
-            {/* Email */}
+        <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 md:p-8">
+
+          {/* Header */}
+          <div className="text-center mb-6">
+            <div className="text-blue-500 text-4xl mb-2">🖼️</div>
+            <h2 className="text-xl md:text-2xl font-bold">Welcome Back</h2>
+            <p className="text-gray-500 text-sm">
+              Login to access your photo gallery
+            </p>
+          </div>
+
+          {/* Form */}
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+
             <div>
               <label className="block mb-2 font-medium">Email</label>
               <input
@@ -124,7 +171,6 @@ const Signin = () => {
               </div>
               <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
             </div>
-
             {/* Password Rules */}
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
               <Rule valid={checks.uppercase} text="1 Uppercase letter" />
@@ -134,13 +180,11 @@ const Signin = () => {
               <Rule valid={checks.length} text="Minimum 8 char" />
             </div>
 
-            {/* Remember + Forgot */}
-            <div className="flex justify-between items-center text-sm text-gray-600">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className="flex justify-between text-sm">
+              <label className="flex items-center gap-2">
                 <input type="checkbox" className="accent-yellow-500" />
                 Remember me
               </label>
-
               <span className="text-yellow-500 hover:underline cursor-pointer">
                 <NavLink to="/forgot-password">
                   Forgot Password
@@ -155,17 +199,22 @@ const Signin = () => {
             >
               {isSubmitting ? "Signing In..." : "Sign In"}
             </button>
-
           </form>
 
-          {/* OR Divider */}
+          {/* Divider */}
           <div className="flex items-center my-6">
             <div className="flex-1 h-px bg-gray-300"></div>
             <span className="px-3 text-gray-500 text-sm">OR</span>
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
 
-          {/* Google Button */}
+          {/* Social Buttons */}
+          {/* <div className="flex flex-col sm:flex-row gap-3">
+            <button className="flex-1 border p-2 rounded-lg">Google</button>
+            <button className="flex-1 border p-2 rounded-lg">Facebook</button>
+            <button className="flex-1 border p-2 rounded-lg">Apple</button>
+          </div> */}
+
           <button
             onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-3 hover:bg-gray-50 transition"
@@ -180,7 +229,6 @@ const Signin = () => {
             </span>
           </button>
 
-
           <p className="text-center text-gray-600 mt-6">
             Don’t have an account?
             <NavLink
@@ -190,23 +238,8 @@ const Signin = () => {
               Sign Up
             </NavLink>
           </p>
-
         </div>
-
       </div>
-
-
-      {/* IMAGE GALLERY */}
-      <div className="bg-gray-50">
-
-        <div >
-
-          <img src={login_image} alt="" className="h-full w-full object-cover" />
-
-        </div>
-
-      </div>
-
     </div>
   )
 }
