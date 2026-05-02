@@ -1,4 +1,3 @@
-import login_image from "../assets/images/login_page_image.jpg";
 import { NavLink, useNavigate, } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
