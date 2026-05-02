@@ -80,7 +80,7 @@ const Signin = () => {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3001/api/auth/google";
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
   };
 
   return (
